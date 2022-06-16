@@ -6,39 +6,35 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import it.prova.gestionepermessi.model.Ruolo;
 import it.prova.gestionepermessi.model.StatoUtente;
 import it.prova.gestionepermessi.model.Utente;
-import it.prova.gestionepermessi.validation.ValidationNoPassword;
-import it.prova.gestionepermessi.validation.ValidationWithPassword;
 
 public class UtenteDTO {
 
 	private Long id;
 
-	@NotBlank(message = "{username.notblank}", groups = { ValidationWithPassword.class, ValidationNoPassword.class })
+	@NotBlank(message = "{username.notblank}")
 	@Size(min = 3, max = 15, message = "Il valore inserito '${validatedValue}' deve essere lungo tra {min} e {max} caratteri")
 	private String username;
 
-	@NotBlank(message = "{password.notblank}", groups = ValidationWithPassword.class)
+	@NotBlank(message = "{password.notblank}")
 	@Size(min = 8, max = 15, message = "Il valore inserito deve essere lungo tra {min} e {max} caratteri")
 	private String password;
 
 	private String confermaPassword;
-
-	@NotBlank(message = "{nome.notblank}", groups = { ValidationWithPassword.class, ValidationNoPassword.class })
-	private String nome;
-
-	@NotBlank(message = "{cognome.notblank}", groups = { ValidationWithPassword.class, ValidationNoPassword.class })
-	private String cognome;
 
 	private Date dateCreated;
 
 	private StatoUtente stato;
 
 	private Long[] ruoliIds;
+
+	@NotNull(message = "{dipendente.notnull}")
+	private DipendenteDTO dipendenteDTO;;
 
 	private List<RuoloDTO> ruoli;
 
@@ -77,22 +73,6 @@ public class UtenteDTO {
 		this.password = password;
 	}
 
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getCognome() {
-		return cognome;
-	}
-
-	public void setCognome(String cognome) {
-		this.cognome = cognome;
-	}
-
 	public Date getDateCreated() {
 		return dateCreated;
 	}
@@ -115,6 +95,22 @@ public class UtenteDTO {
 
 	public void setConfermaPassword(String confermaPassword) {
 		this.confermaPassword = confermaPassword;
+	}
+
+	public DipendenteDTO getDipendenteDTO() {
+		return dipendenteDTO;
+	}
+
+	public void setDipendenteDTO(DipendenteDTO dipendenteDTO) {
+		this.dipendenteDTO = dipendenteDTO;
+	}
+
+	public List<RuoloDTO> getRuoli() {
+		return ruoli;
+	}
+
+	public void setRuoli(List<RuoloDTO> ruoli) {
+		this.ruoli = ruoli;
 	}
 
 	public Long[] getRuoliIds() {
@@ -159,11 +155,4 @@ public class UtenteDTO {
 		return this.stato != null && this.stato.equals(StatoUtente.DISABILITATO);
 	}
 
-	public List<RuoloDTO> getRuoli() {
-		return ruoli;
-	}
-
-	public void setRuoli(List<RuoloDTO> ruoli) {
-		this.ruoli = ruoli;
-	}
 }
