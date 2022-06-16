@@ -47,6 +47,12 @@ public class Utente {
 	public Utente() {
 	}
 
+	public Utente(String username, String password, Date dateCreated) {
+		this.username = username;
+		this.password = password;
+		this.dateCreated = dateCreated;
+	}
+
 	public Utente(Long id, String username, String password, Date dateCreated, StatoUtente stato, Dipendente dipendente,
 			Set<Ruolo> ruoli) {
 		this.id = id;

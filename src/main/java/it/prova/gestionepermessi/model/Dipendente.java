@@ -58,8 +58,8 @@ public class Dipendente {
 	}
 
 	public Dipendente(Long id, String nome, String cognome, String codFis, String email, Date dataNascita,
-			Date dataAssunzione, Date dataDimissioni, it.prova.gestionepermessi.model.Sesso sesso,
-			@NotNull Utente utente, Set<RichiestaPermesso> richiestePermessi) {
+			Date dataAssunzione, Date dataDimissioni, Sesso sesso, @NotNull Utente utente,
+			Set<RichiestaPermesso> richiestePermessi) {
 		this.id = id;
 		this.nome = nome;
 		this.cognome = cognome;
@@ -74,7 +74,7 @@ public class Dipendente {
 	}
 
 	public Dipendente(Long id, String nome, String cognome, String codFis, String email, Date dataNascita,
-			Date dataAssunzione, Date dataDimissioni, it.prova.gestionepermessi.model.Sesso sesso) {
+			Date dataAssunzione, Date dataDimissioni, Sesso sesso) {
 		this.id = id;
 		this.nome = nome;
 		this.cognome = cognome;
@@ -91,6 +91,17 @@ public class Dipendente {
 		this.nome = nome;
 		this.cognome = cognome;
 		this.codFis = codFis;
+	}
+
+	public Dipendente(String nome, String cognome, String codFis, String email, Date dataNascita, Date dataAssunzione,
+			Sesso sesso) {
+		this.nome = nome;
+		this.cognome = cognome;
+		this.codFis = codFis;
+		this.email = email;
+		this.dataNascita = dataNascita;
+		this.dataAssunzione = dataAssunzione;
+		this.sesso = sesso;
 	}
 
 	public Long getId() {
