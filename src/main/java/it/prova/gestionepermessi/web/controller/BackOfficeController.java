@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import it.prova.gestionepermessi.dto.DipendenteDTO;
 import it.prova.gestionepermessi.model.Dipendente;
@@ -35,6 +36,15 @@ public class BackOfficeController {
 		List<Dipendente> dipendenti = dipendenteService.findByExample(dipendenteExample.buildDipendenteModel(), pageNo, pageSize, sortBy).getContent();
 		model.addAttribute("dipendente_list_attribute", DipendenteDTO.createDipendenteDTOListFromModelList(dipendenti));
 		return "backoffice/listDipendenti";
+	}
+	
+	@GetMapping("/listDipendente")
+	public ModelAndView listAllDipendenti() {
+		ModelAndView mv = new ModelAndView();
+		List<Dipendente> dipendenti = dipendenteService.listAllDipendenti();
+		mv.addObject("dipendente_list_attribute", DipendenteDTO.createDipendenteDTOListFromModelList(dipendenti));
+		mv.setViewName("backoffice/listDipendenti");
+		return mv;
 	}
 
 }
