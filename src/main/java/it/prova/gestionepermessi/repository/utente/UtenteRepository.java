@@ -34,4 +34,7 @@ public interface UtenteRepository extends CrudRepository<Utente, Long> {
 	@Query("update Utente u set u.password = :password where u.id = :idUtente")
 	void resetPasswordRepository(@Param("idUtente") Long idUtente, @Param("password") String password);
 
+	@Query("from Utente u left join fetch u.ruoli join fetch u.dipendente where u.id = ?1")
+	Optional<Utente> findByIdEager(Long id);
+
 }

@@ -164,4 +164,9 @@ public class UtenteServiceImpl implements UtenteService {
 		utenteRepository.resetPasswordRepository(idUtente, passwordEncoder.encode("Password@01"));
 	}
 
+	@Override
+	public Utente caricaSingoloUtenteEager(Long id) {
+		return utenteRepository.findByIdEager(id).orElse(null);
+	}
+
 }
