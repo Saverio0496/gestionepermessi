@@ -61,23 +61,23 @@ public class UtenteServiceImpl implements UtenteService {
 		utenteRepository.save(utenteReloaded);
 	}
 
-//	@Transactional
-//	public void inserisciNuovo(Utente utenteInstance) {
-//		utenteInstance.setStato(StatoUtente.CREATO);
-//		utenteInstance.setPassword(passwordEncoder.encode(utenteInstance.getPassword()));
-//		utenteInstance.setDateCreated(new Date());
-//		utenteRepository.save(utenteInstance);
-//	}
-//
-//	@Transactional
-//	public void inserisciNuovoConDipendente(Utente utenteInstance, Dipendente dipendenteInstance) {
-//		utenteInstance.setStato(StatoUtente.CREATO);
-//		utenteInstance.setPassword(passwordEncoder.encode(utenteInstance.getPassword()));
-//		utenteInstance.setDateCreated(new Date());
-//		utenteRepository.save(utenteInstance);
-//		dipendenteRepository.save(dipendenteInstance);
-//
-//	}
+	@Transactional
+	public void inserisciNuovo(Utente utenteInstance) {
+		utenteInstance.setStato(StatoUtente.CREATO);
+		utenteInstance.setPassword(passwordEncoder.encode(utenteInstance.getPassword()));
+		utenteInstance.setDateCreated(new Date());
+		utenteRepository.save(utenteInstance);
+	}
+
+	@Transactional
+	public void inserisciNuovoConDipendente(Utente utenteInstance, Dipendente dipendenteInstance) {
+		utenteInstance.setStato(StatoUtente.CREATO);
+		utenteInstance.setPassword(passwordEncoder.encode(utenteInstance.getPassword()));
+		utenteInstance.setDateCreated(new Date());
+		utenteRepository.save(utenteInstance);
+		dipendenteRepository.save(dipendenteInstance);
+
+	}
 
 	@Transactional
 	public void rimuovi(Utente utenteInstance) {

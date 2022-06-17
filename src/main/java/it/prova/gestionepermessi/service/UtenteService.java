@@ -17,7 +17,7 @@ public interface UtenteService {
 
 	public void aggiorna(Utente utenteInstance);
 
-//	public void inserisciNuovo(Utente utenteInstance);
+	public void inserisciNuovo(Utente utenteInstance);
 
 	public void rimuovi(Utente utenteInstance);
 
@@ -33,6 +33,6 @@ public interface UtenteService {
 
 	public void resetPasswordService(Long idUtente);
 
-//	public void inserisciNuovoConDipendente(Utente utenteInstance, Dipendente dipendenteInstance);
+	public void inserisciNuovoConDipendente(Utente utenteInstance, Dipendente dipendenteInstance);
 
 }

@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import it.prova.gestionepermessi.model.Dipendente;
 import it.prova.gestionepermessi.model.Ruolo;
 import it.prova.gestionepermessi.model.StatoUtente;
 import it.prova.gestionepermessi.model.Utente;
@@ -38,15 +39,18 @@ public class UtenteDTO {
 
 	private List<RuoloDTO> ruoli;
 
+	private Dipendente dipendente;
+
 	public UtenteDTO() {
 	}
 
-	public UtenteDTO(Long id, String username, Date dateCreated, StatoUtente stato) {
+	public UtenteDTO(Long id, String username, Date dateCreated, StatoUtente stato, Dipendente dipendente) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.dateCreated = dateCreated;
 		this.stato = stato;
+		this.dipendente = dipendente;
 	}
 
 	public Long getId() {
@@ -120,6 +124,15 @@ public class UtenteDTO {
 	public void setRuoliIds(Long[] ruoliIds) {
 		this.ruoliIds = ruoliIds;
 	}
+	
+	public Dipendente getDipendente() {
+		return dipendente;
+	}
+
+	public void setDipendente(Dipendente dipendente) {
+		this.dipendente = dipendente;
+	}
+
 
 	public Utente buildUtenteModel(boolean includeIdRoles) {
 		Utente result = new Utente(this.id, this.username, this.password, this.dateCreated, this.stato);
@@ -132,7 +145,7 @@ public class UtenteDTO {
 	// niente password...
 	public static UtenteDTO buildUtenteDTOFromModel(Utente utenteModel) {
 		UtenteDTO result = new UtenteDTO(utenteModel.getId(), utenteModel.getUsername(), utenteModel.getDateCreated(),
-				utenteModel.getStato());
+				utenteModel.getStato(), utenteModel.getDipendente());
 
 		if (!utenteModel.getRuoli().isEmpty())
 			result.ruoliIds = utenteModel.getRuoli().stream().map(r -> r.getId()).collect(Collectors.toList())
@@ -154,5 +167,6 @@ public class UtenteDTO {
 	public boolean isDisabilitato() {
 		return this.stato != null && this.stato.equals(StatoUtente.DISABILITATO);
 	}
+
 
 }
