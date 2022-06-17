@@ -1,7 +1,6 @@
 package it.prova.gestionepermessi.dto;
 
 import java.util.Date;
-import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -169,10 +168,10 @@ public class DipendenteDTO {
 		DipendenteDTO result = new DipendenteDTO(dipendenteModel.getId(), dipendenteModel.getNome(),
 				dipendenteModel.getCognome(), dipendenteModel.getCodFis(), dipendenteModel.getEmail(),
 				dipendenteModel.getDataNascita(), dipendenteModel.getDataAssunzione(), dipendenteModel.getSesso());
-
-		if (!dipendenteModel.getRichiestePermessi().isEmpty())
-			result.richiestePermessiIds = dipendenteModel.getRichiestePermessi().stream().map(r -> r.getId())
-					.collect(Collectors.toList()).toArray(new Long[] {});
+//
+//		if (!dipendenteModel.getRichiestePermessi().isEmpty())
+//			result.richiestePermessiIds = dipendenteModel.getRichiestePermessi().stream().map(r -> r.getId())
+//					.collect(Collectors.toList()).toArray(new Long[] {});
 
 		return result;
 	}

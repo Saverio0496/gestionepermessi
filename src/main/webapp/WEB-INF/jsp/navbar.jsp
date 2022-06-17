@@ -18,7 +18,6 @@
 		        	<div class="dropdown-menu" aria-labelledby="dropdown01">
 		        		<a class="dropdown-item" href="${pageContext.request.contextPath}/utente/">Lista Utenti</a>
 		          		<a class="dropdown-item" href="${pageContext.request.contextPath}/utente/search">Ricerca Utenti</a>
-		          		<a class="dropdown-item" href="${pageContext.request.contextPath}/utente/insert">Inserisci Utente</a>
 		        	</div>
 		      	</li>
 		       	<li class="nav-item">
@@ -49,9 +48,9 @@
 		      	<li class="nav-item dropdown">
 		        	<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestione Richieste Permesso</a>
 		        	<div class="dropdown-menu" aria-labelledby="dropdown01">
-		        		<a class="dropdown-item" href="${pageContext.request.contextPath}/richiestapermesso/">Lista Dipendenti</a>
-		          		<a class="dropdown-item" href="${pageContext.request.contextPath}/richiestapermesso/search">Ricerca Richieste Permesso</a>
-		          		<a class="dropdown-item" href="${pageContext.request.contextPath}/richiestapermesso/insert">Inserisci Dipendente</a>
+		        		<a class="dropdown-item" href="${pageContext.request.contextPath}/richiestapermesso/">Lista Richieste Permessi</a>
+		          		<a class="dropdown-item" href="${pageContext.request.contextPath}/richiestapermesso/search">Ricerca Richieste Permessi</a>
+		          		<a class="dropdown-item" href="${pageContext.request.contextPath}/richiestapermesso/insert">Inserisci Richiesta Permesso</a>
 		        	</div>
 		      	</li>
 		   </sec:authorize>
