@@ -37,5 +37,7 @@ public interface UtenteService {
 	public void inserisciNuovoConDipendente(Utente utenteInstance, Dipendente dipendenteInstance);
 	
 	public Utente caricaSingoloUtenteEager(Long id);
+	
+	public void aggiornaPerAdmin(Utente utenteInstance);
 
 }

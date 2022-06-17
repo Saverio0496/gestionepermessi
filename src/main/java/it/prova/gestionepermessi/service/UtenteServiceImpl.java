@@ -174,4 +174,12 @@ public class UtenteServiceImpl implements UtenteService {
 		return utenteRepository.findByIdEager(id).orElse(null);
 	}
 
+	public void aggiornaPerAdmin(Utente utenteInstance) {
+		Utente utenteReloaded = utenteRepository.findById(utenteInstance.getId()).orElse(null);
+		if (utenteReloaded == null)
+			throw new RuntimeException("Elemento non trovato");
+		utenteReloaded.setRuoli(utenteInstance.getRuoli());
+		utenteRepository.save(utenteReloaded);
+	}
+
 }
