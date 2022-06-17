@@ -54,7 +54,7 @@
 				        <h1 class="display-5 fw-bold">Benvenuto alla Gestione Permessi</h1>
 				        <p class="col-md-8 fs-4">Portale innovativo per le richieste dei permessi lavorativi!</p>
 		   				 <sec:authorize access="hasRole('BO_USER')">
-		          				<a class="btn btn-primary btn-lg" href="${pageContext.request.contextPath}/dipendente/search">Vai a Ricerca Dipendenti</a>
+		          				<a class="btn btn-primary btn-lg" href="${pageContext.request.contextPath}/admin/searchDipendente">Vai a Ricerca Dipendenti</a>
 		          				<a class="btn btn-primary btn-lg" href="${pageContext.request.contextPath}/richiestapermesso/search">Vai a Ricerca Richiesta Permesso</a>
 		          				<a class="btn btn-primary btn-lg" href="${pageContext.request.contextPath}/messaggio/search">Vai a Ricerca Messaggi</a>
 		   				</sec:authorize>
@@ -87,7 +87,7 @@
 			        </div>
 			        	<h2>Ricerca Dipendenti</h2>
 			        	<p>Da qui potrai accedere alla ricerca dei dipendenti.</p>
-			        	<a href="${pageContext.request.contextPath}/dipendente/search" class="icon-link">
+			        	<a href="${pageContext.request.contextPath}/admin/searchDipendente" class="icon-link">
 			          	Vai alla funzionalità
 			          	<svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"/></svg>
 			        	</a>

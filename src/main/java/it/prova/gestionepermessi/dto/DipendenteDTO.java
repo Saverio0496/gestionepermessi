@@ -52,13 +52,13 @@ public class DipendenteDTO {
 
 	public DipendenteDTO(Long id, @NotBlank(message = "{nome.notblank}") String nome,
 			@NotBlank(message = "{cognome.notblank}") String cognome,
-			@NotBlank(message = "{codiceFiscale.notblank}") @Size(min = 16, max = 16, message = "Errore, la lunghezza del codice fiscale deve essere di 16 caratteri!") String codiceFiscale,
+			@NotBlank(message = "{codiceFiscale.notblank}") @Size(min = 16, max = 16, message = "Errore, la lunghezza del codice fiscale deve essere di 16 caratteri!") String codFis,
 			String email, @NotNull(message = "{dataDiNascita.notnull}") Date dataNascita, Date dataAssunzione,
 			@NotNull(message = "{sesso.notblanck}") Sesso sesso) {
 		this.id = id;
 		this.nome = nome;
 		this.cognome = cognome;
-		this.codFis = codiceFiscale;
+		this.codFis = codFis;
 		this.email = email;
 		this.dataNascita = dataNascita;
 		this.dataAssunzione = dataAssunzione;
@@ -67,11 +67,11 @@ public class DipendenteDTO {
 
 	public DipendenteDTO(Long id, @NotBlank(message = "{nome.notblank}") String nome,
 			@NotBlank(message = "{cognome.notblank}") String cognome,
-			@NotBlank(message = "{codiceFiscale.notblank}") String codiceFiscale) {
+			@NotBlank(message = "{codiceFiscale.notblank}") String codFis) {
 		this.id = id;
 		this.nome = nome;
 		this.cognome = cognome;
-		this.codFis = codiceFiscale;
+		this.codFis = codFis;
 	}
 
 	public DipendenteDTO(Long id) {
@@ -102,12 +102,12 @@ public class DipendenteDTO {
 		this.cognome = cognome;
 	}
 
-	public String getCodiceFiscale() {
+	public String getCodFis() {
 		return codFis;
 	}
 
-	public void setCodiceFiscale(String codiceFiscale) {
-		this.codFis = codiceFiscale;
+	public void setCodFis(String codFis) {
+		this.codFis = codFis;
 	}
 
 	public String getEmail() {

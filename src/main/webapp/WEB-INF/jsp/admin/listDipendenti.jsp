@@ -51,7 +51,7 @@
 										<td>${dipendenteItem.codFis }</td>
 										<td>${dipendenteItem.email }</td>
 										<td>
-											<a class="btn btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/admin/showDipendente/${utenteItem.id}">Visualizza</a>
+											<a class="btn btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/admin/showDipendente/${dipendenteItem.id}">Visualizza</a>
 										</td>
 									</tr>
 								</c:forEach>

@@ -16,5 +16,7 @@ public interface DipendenteService {
 	public void inserisciNuovoConUtente(Dipendente dipendenteInstance, Utente utenteInstance);
 
 	public void rimuovi(Dipendente dipendenteInstance);
+	
+	public List<Dipendente> findByExample(Dipendente example);
 
 }

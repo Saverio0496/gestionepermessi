@@ -117,5 +117,25 @@ public class AdminController {
 		mv.setViewName("admin/listDipendenti");
 		return mv;
 	}
+	
+	@GetMapping("/searchDipendente")
+	public String searchDipendente(Model model) {
+		model.addAttribute("dipendente_list_attribute",
+				DipendenteDTO.createDipendenteDTOListFromModelList(dipendenteService.listAllDipendenti()));
+		return "admin/searchDipendente";
+	}
+	
+	@PostMapping("/listForSearchDipendente")
+	public String listDipendenti(DipendenteDTO dipendenteExample, ModelMap model) {
+		List<Dipendente> dipendenti = dipendenteService.findByExample(dipendenteExample.buildDipendenteModel());
+		model.addAttribute("dipendente_list_attribute", DipendenteDTO.createDipendenteDTOListFromModelList(dipendenti));
+		return "admin/listDipendenti";
+	}
+	
+	@GetMapping("/showDipendente/{idDipendente}")
+	public String showDipendente(@PathVariable(required = true) Long idDipendente, Model model) {
+		model.addAttribute("show_dipendente_attr", dipendenteService.caricaSingoloDipendente(idDipendente));
+		return "admin/showDipendente";	
+	}
 
 }
