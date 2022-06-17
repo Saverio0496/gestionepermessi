@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,6 +46,12 @@ public class BackOfficeController {
 		mv.addObject("dipendente_list_attribute", DipendenteDTO.createDipendenteDTOListFromModelList(dipendenti));
 		mv.setViewName("backoffice/listDipendenti");
 		return mv;
+	}
+	
+	@GetMapping("/showDipendente/{idDipendente}")
+	public String showDipendente(@PathVariable(required = true) Long idDipendente, Model model) {
+		model.addAttribute("show_dipendente_attr", dipendenteService.caricaSingoloDipendente(idDipendente));
+		return "backoffice/showDipendente";	
 	}
 
 }

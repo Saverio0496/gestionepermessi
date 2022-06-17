@@ -76,7 +76,7 @@
 			        	</div>
 			        	<h2>Ricerca Utenti</h2>
 			        	<p>Da qui potrai accedere alla ricerca degli utenti e da lì a tutte le altre funzionalità.</p>
-			        	<a href="${pageContext.request.contextPath}/utente/search" class="icon-link">
+			        	<a href="${pageContext.request.contextPath}/admin/searchUtente" class="icon-link">
 			          	Vai alla funzionalità
 			          	<svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"/></svg>
 			        	</a>

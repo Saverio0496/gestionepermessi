@@ -28,9 +28,9 @@
 		      	<li class="nav-item dropdown">
 		        	<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestione Dipendenti</a>
 		        	<div class="dropdown-menu" aria-labelledby="dropdown01">
-		        		<a class="dropdown-item" href="${pageContext.request.contextPath}/admin/listDipendente">Lista Dipendenti</a>
-		          		<a class="dropdown-item" href="${pageContext.request.contextPath}/admin/searchDipendente">Ricerca Dipendenti</a>
-		          		<a class="dropdown-item" href="${pageContext.request.contextPath}/dipendente/insert">Inserisci Dipendente</a>
+		        		<a class="dropdown-item" href="${pageContext.request.contextPath}/backoffice/listDipendente">Lista Dipendenti</a>
+		          		<a class="dropdown-item" href="${pageContext.request.contextPath}/backoffice/searchDipendente">Ricerca Dipendenti</a>
+		          		<a class="dropdown-item" href="${pageContext.request.contextPath}/backoffice/insertDipendente">Inserisci Dipendente</a>
 		        	</div>
 		      	</li>
 		      	<li class="nav-item">
