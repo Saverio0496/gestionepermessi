@@ -1,6 +1,8 @@
 package it.prova.gestionepermessi.dto;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -18,7 +20,7 @@ public class DipendenteDTO {
 	private String cognome;
 	@NotBlank(message = "{codiceFiscale.notblank}")
 	@Size(min = 16, max = 16, message = "Errore, la lunghezza del codice fiscale deve essere di 16 caratteri!")
-	private String codiceFiscale;
+	private String codFis;
 	private String email;
 	@NotNull(message = "{dataDiNascita.notnull}")
 	private Date dataNascita;
@@ -41,7 +43,7 @@ public class DipendenteDTO {
 		this.id = id;
 		this.nome = nome;
 		this.cognome = cognome;
-		this.codiceFiscale = codiceFiscale;
+		this.codFis = codiceFiscale;
 		this.email = email;
 		this.dataNascita = dataNascita;
 		this.dataAssunzione = dataAssunzione;
@@ -56,7 +58,7 @@ public class DipendenteDTO {
 		this.id = id;
 		this.nome = nome;
 		this.cognome = cognome;
-		this.codiceFiscale = codiceFiscale;
+		this.codFis = codiceFiscale;
 		this.email = email;
 		this.dataNascita = dataNascita;
 		this.dataAssunzione = dataAssunzione;
@@ -69,7 +71,7 @@ public class DipendenteDTO {
 		this.id = id;
 		this.nome = nome;
 		this.cognome = cognome;
-		this.codiceFiscale = codiceFiscale;
+		this.codFis = codiceFiscale;
 	}
 
 	public DipendenteDTO(Long id) {
@@ -101,11 +103,11 @@ public class DipendenteDTO {
 	}
 
 	public String getCodiceFiscale() {
-		return codiceFiscale;
+		return codFis;
 	}
 
 	public void setCodiceFiscale(String codiceFiscale) {
-		this.codiceFiscale = codiceFiscale;
+		this.codFis = codiceFiscale;
 	}
 
 	public String getEmail() {
@@ -163,17 +165,29 @@ public class DipendenteDTO {
 	public void setRichiestePermessiIds(Long[] richiestePermessiIds) {
 		this.richiestePermessiIds = richiestePermessiIds;
 	}
+	
+	public Dipendente buildDipendenteModel() {
+		return new Dipendente(this.id, this.nome, this.cognome, this.codFis, this.email, this.dataNascita,
+				this.dataAssunzione, this.dataDimissioni, this.sesso);
+	}
+
 
 	public static DipendenteDTO buildDipendenteDTOFromModel(Dipendente dipendenteModel) {
 		DipendenteDTO result = new DipendenteDTO(dipendenteModel.getId(), dipendenteModel.getNome(),
 				dipendenteModel.getCognome(), dipendenteModel.getCodFis(), dipendenteModel.getEmail(),
 				dipendenteModel.getDataNascita(), dipendenteModel.getDataAssunzione(), dipendenteModel.getSesso());
-//
+
 //		if (!dipendenteModel.getRichiestePermessi().isEmpty())
 //			result.richiestePermessiIds = dipendenteModel.getRichiestePermessi().stream().map(r -> r.getId())
 //					.collect(Collectors.toList()).toArray(new Long[] {});
 
 		return result;
+	}
+	
+	public static List<DipendenteDTO> createDipendenteDTOListFromModelList(List<Dipendente> modelListInput) {
+		return modelListInput.stream().map(dipendenteEntity -> {
+			return DipendenteDTO.buildDipendenteDTOFromModel(dipendenteEntity);
+		}).collect(Collectors.toList());
 	}
 
 }

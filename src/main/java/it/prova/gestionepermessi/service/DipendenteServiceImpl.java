@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import it.prova.gestionepermessi.model.Dipendente;
-import it.prova.gestionepermessi.model.StatoUtente;
 import it.prova.gestionepermessi.model.Utente;
 import it.prova.gestionepermessi.repository.dipendente.DipendenteRepository;
 
@@ -18,7 +17,7 @@ public class DipendenteServiceImpl implements DipendenteService {
 	private DipendenteRepository dipendenteRepository;
 
 	@Override
-	public List<Dipendente> listAllUtenti() {
+	public List<Dipendente> listAllDipendenti() {
 		return (List<Dipendente>) dipendenteRepository.findAll();
 	}
 

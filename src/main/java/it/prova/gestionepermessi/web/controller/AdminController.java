@@ -18,10 +18,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import it.prova.gestionepermessi.dto.DipendenteDTO;
 import it.prova.gestionepermessi.dto.RuoloDTO;
 import it.prova.gestionepermessi.dto.UtenteDTO;
 import it.prova.gestionepermessi.dto.UtenteSearchDTO;
+import it.prova.gestionepermessi.model.Dipendente;
 import it.prova.gestionepermessi.model.Utente;
+import it.prova.gestionepermessi.service.DipendenteService;
 import it.prova.gestionepermessi.service.RuoloService;
 import it.prova.gestionepermessi.service.UtenteService;
 
@@ -34,6 +37,9 @@ public class AdminController {
 
 	@Autowired
 	private RuoloService ruoloService;
+	
+	@Autowired
+	private DipendenteService dipendenteService;
 
 	@GetMapping
 	public ModelAndView listAllUtenti() {
@@ -101,6 +107,15 @@ public class AdminController {
 		
 		redirectAttr.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
 		return "redirect:/admin";
+	}
+	
+	@GetMapping("/listDipendente")
+	public ModelAndView listAllDipendenti() {
+		ModelAndView mv = new ModelAndView();
+		List<Dipendente> dipendenti = dipendenteService.listAllDipendenti();
+		mv.addObject("dipendente_list_attribute", DipendenteDTO.createDipendenteDTOListFromModelList(dipendenti));
+		mv.setViewName("admin/listDipendenti");
+		return mv;
 	}
 
 }

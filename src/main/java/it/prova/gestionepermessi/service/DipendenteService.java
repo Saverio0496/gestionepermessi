@@ -7,7 +7,7 @@ import it.prova.gestionepermessi.model.Utente;
 
 public interface DipendenteService {
 	
-	public List<Dipendente> listAllUtenti() ;
+	public List<Dipendente> listAllDipendenti() ;
 
 	public Dipendente caricaSingoloDipendente(Long id);
 
