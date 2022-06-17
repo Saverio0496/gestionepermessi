@@ -88,5 +88,19 @@ public class AdminController {
 		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
 		return "redirect:/admin";
 	}
+	
+	@PostMapping("/cambiaStato")
+	public String cambiaStato(@RequestParam(name = "idUtenteForChangingStato", required = true) Long idUtente) {
+		utenteService.changeUserAbilitation(idUtente);
+		return "redirect:/admin";
+	}
+	
+	@PostMapping("/resetPassword")
+	public String resetPassword(@RequestParam(name = "idUtenteForResetpassword", required = true) Long idUtente, RedirectAttributes redirectAttr) {
+		utenteService.resetPasswordService(idUtente);
+		
+		redirectAttr.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
+		return "redirect:/admin";
+	}
 
 }

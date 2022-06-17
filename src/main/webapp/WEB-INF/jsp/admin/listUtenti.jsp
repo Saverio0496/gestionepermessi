@@ -83,7 +83,7 @@
 	            <div class="modal-body">
 	                Continuare con l'operazione?
 	            </div>
-	            <form method="post" action="${pageContext.request.contextPath}/utente/cambiaStato" >
+	            <form method="post" action="${pageContext.request.contextPath}/admin/cambiaStato" >
 		            <div class="modal-footer">
 		            	<input type="hidden" name="idUtenteForChangingStato" id="idUtenteForChangingStato">
 		                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
@@ -116,7 +116,7 @@
 	            <div class="modal-body">
 	                Continuare con l'operazione?
 	            </div>
-	            <form method="post" action="${pageContext.request.contextPath}/utente/resetPassword" >
+	            <form method="post" action="${pageContext.request.contextPath}/admin/resetPassword" >
 		            <div class="modal-footer">
 		            	<input type="hidden" name="idUtenteForResetpassword" id="idUtenteForResetpassword">
 		                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
