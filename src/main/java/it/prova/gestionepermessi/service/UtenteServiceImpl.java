@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
@@ -60,23 +61,23 @@ public class UtenteServiceImpl implements UtenteService {
 		utenteRepository.save(utenteReloaded);
 	}
 
-	@Transactional
-	public void inserisciNuovo(Utente utenteInstance) {
-		utenteInstance.setStato(StatoUtente.CREATO);
-		utenteInstance.setPassword(passwordEncoder.encode(utenteInstance.getPassword()));
-		utenteInstance.setDateCreated(new Date());
-		utenteRepository.save(utenteInstance);
-	}
-
-	@Transactional
-	public void inserisciNuovoConDipendente(Utente utenteInstance, Dipendente dipendenteInstance) {
-		utenteInstance.setStato(StatoUtente.CREATO);
-		utenteInstance.setPassword(passwordEncoder.encode(utenteInstance.getPassword()));
-		utenteInstance.setDateCreated(new Date());
-		utenteRepository.save(utenteInstance);
-		dipendenteRepository.save(dipendenteInstance);
-
-	}
+//	@Transactional
+//	public void inserisciNuovo(Utente utenteInstance) {
+//		utenteInstance.setStato(StatoUtente.CREATO);
+//		utenteInstance.setPassword(passwordEncoder.encode(utenteInstance.getPassword()));
+//		utenteInstance.setDateCreated(new Date());
+//		utenteRepository.save(utenteInstance);
+//	}
+//
+//	@Transactional
+//	public void inserisciNuovoConDipendente(Utente utenteInstance, Dipendente dipendenteInstance) {
+//		utenteInstance.setStato(StatoUtente.CREATO);
+//		utenteInstance.setPassword(passwordEncoder.encode(utenteInstance.getPassword()));
+//		utenteInstance.setDateCreated(new Date());
+//		utenteRepository.save(utenteInstance);
+//		dipendenteRepository.save(dipendenteInstance);
+//
+//	}
 
 	@Transactional
 	public void rimuovi(Utente utenteInstance) {
@@ -89,20 +90,33 @@ public class UtenteServiceImpl implements UtenteService {
 
 			List<Predicate> predicates = new ArrayList<Predicate>();
 
+			// faccio fetch del dipendente e ruoli a prescindere
+			root.fetch("dipendente", JoinType.INNER);
+			root.fetch("ruoli", JoinType.LEFT);
+
 			if (StringUtils.isNotEmpty(example.getUsername()))
 				predicates
 						.add(cb.like(cb.upper(root.get("username")), "%" + example.getUsername().toUpperCase() + "%"));
 
+			if (example.getDipendente() != null && StringUtils.isNotEmpty(example.getDipendente().getNome()))
+				predicates.add(cb.like(cb.upper(root.join("dipendente", JoinType.INNER).get("nome")),
+						"%" + example.getDipendente().getNome().toUpperCase() + "%"));
+
+			if (example.getDipendente() != null && StringUtils.isNotEmpty(example.getDipendente().getCognome()))
+				predicates.add(cb.like(cb.upper(root.join("dipendente", JoinType.INNER).get("cognome")),
+						"%" + example.getDipendente().getCognome().toUpperCase() + "%"));
+
+			if (example.getDipendente() != null && StringUtils.isNotEmpty(example.getDipendente().getCodFis()))
+				predicates.add(cb.like(cb.upper(root.join("dipendente", JoinType.INNER).get("codFis")),
+						"%" + example.getDipendente().getCodFis().toUpperCase() + "%"));
+
 			if (example.getStato() != null)
 				predicates.add(cb.equal(root.get("stato"), example.getStato()));
 
-			if (example.getDateCreated() != null)
-				predicates.add(cb.greaterThanOrEqualTo(root.get("dateCreated"), example.getDateCreated()));
-
-			if (!example.getRuoli().isEmpty()) {
+			if (example.getRuoli() != null && !example.getRuoli().isEmpty())
 				predicates.add(root.join("ruoli").in(example.getRuoli()));
-			}
 
+			query.distinct(true);
 			return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 		};
 
