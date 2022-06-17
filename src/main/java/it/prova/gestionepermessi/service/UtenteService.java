@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
+import it.prova.gestionepermessi.dto.UtenteSearchDTO;
 import it.prova.gestionepermessi.model.Dipendente;
 import it.prova.gestionepermessi.model.Utente;
 
@@ -21,7 +22,7 @@ public interface UtenteService {
 
 	public void rimuovi(Utente utenteInstance);
 
-	public Page<Utente> findByExample(Utente example, Integer pageNo, Integer pageSize, String sortBy);
+	public Page<Utente> findByExample(UtenteSearchDTO example, Integer pageNo, Integer pageSize, String sortBy);
 
 	public Utente findByUsernameAndPassword(String username, String password);
 

@@ -28,7 +28,7 @@
 			        <h5>Lista dei risultati</h5> 
 			    </div>
 			    <div class='card-body'>
-			    	<a href="${pageContext.request.contextPath}/admin/search" class='btn btn-outline-secondary' >
+			    	<a href="${pageContext.request.contextPath}/admin/searchUtente" class='btn btn-outline-secondary' >
 				            <i class='fa fa-chevron-left'></i> Torna alla Ricerca
 				        </a>
 			    

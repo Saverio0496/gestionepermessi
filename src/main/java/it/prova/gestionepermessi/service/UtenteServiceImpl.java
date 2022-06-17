@@ -1,8 +1,10 @@
 package it.prova.gestionepermessi.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
@@ -18,7 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.prova.gestionepermessi.dto.UtenteSearchDTO;
 import it.prova.gestionepermessi.model.Dipendente;
+import it.prova.gestionepermessi.model.Ruolo;
 import it.prova.gestionepermessi.model.StatoUtente;
 import it.prova.gestionepermessi.model.Utente;
 import it.prova.gestionepermessi.repository.dipendente.DipendenteRepository;
@@ -85,7 +89,7 @@ public class UtenteServiceImpl implements UtenteService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<Utente> findByExample(Utente example, Integer pageNo, Integer pageSize, String sortBy) {
+	public Page<Utente> findByExample(UtenteSearchDTO example, Integer pageNo, Integer pageSize, String sortBy) {
 		Specification<Utente> specificationCriteria = (root, query, cb) -> {
 
 			List<Predicate> predicates = new ArrayList<Predicate>();
@@ -98,23 +102,24 @@ public class UtenteServiceImpl implements UtenteService {
 				predicates
 						.add(cb.like(cb.upper(root.get("username")), "%" + example.getUsername().toUpperCase() + "%"));
 
-			if (example.getDipendente() != null && StringUtils.isNotEmpty(example.getDipendente().getNome()))
+			if (StringUtils.isNotEmpty(example.getNome()))
 				predicates.add(cb.like(cb.upper(root.join("dipendente", JoinType.INNER).get("nome")),
-						"%" + example.getDipendente().getNome().toUpperCase() + "%"));
+						"%" + example.getNome().toUpperCase() + "%"));
 
-			if (example.getDipendente() != null && StringUtils.isNotEmpty(example.getDipendente().getCognome()))
+			if (StringUtils.isNotEmpty(example.getCognome()))
 				predicates.add(cb.like(cb.upper(root.join("dipendente", JoinType.INNER).get("cognome")),
-						"%" + example.getDipendente().getCognome().toUpperCase() + "%"));
+						"%" + example.getCognome().toUpperCase() + "%"));
 
-			if (example.getDipendente() != null && StringUtils.isNotEmpty(example.getDipendente().getCodFis()))
+			if (StringUtils.isNotEmpty(example.getCodFis()))
 				predicates.add(cb.like(cb.upper(root.join("dipendente", JoinType.INNER).get("codFis")),
-						"%" + example.getDipendente().getCodFis().toUpperCase() + "%"));
+						"%" + example.getCodFis().toUpperCase() + "%"));
 
 			if (example.getStato() != null)
 				predicates.add(cb.equal(root.get("stato"), example.getStato()));
 
-			if (example.getRuoli() != null && !example.getRuoli().isEmpty())
-				predicates.add(root.join("ruoli").in(example.getRuoli()));
+			if (example.getRuoliIds() != null && example.getRuoliIds().length > 0)
+				predicates.add(root.join("ruoli").in(Arrays.asList(example.getRuoliIds()).stream()
+						.map(id -> new Ruolo(id)).collect(Collectors.toSet())));
 
 			query.distinct(true);
 			return cb.and(predicates.toArray(new Predicate[predicates.size()]));
