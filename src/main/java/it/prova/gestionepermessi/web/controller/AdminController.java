@@ -126,8 +126,9 @@ public class AdminController {
 	}
 	
 	@PostMapping("/listForSearchDipendente")
-	public String listDipendenti(DipendenteDTO dipendenteExample, ModelMap model) {
-		List<Dipendente> dipendenti = dipendenteService.findByExample(dipendenteExample.buildDipendenteModel());
+	public String listDipendenti(DipendenteDTO dipendenteExample, @RequestParam(defaultValue = "0") Integer pageNo,
+			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "id") String sortBy, ModelMap model) {
+		List<Dipendente> dipendenti = dipendenteService.findByExample(dipendenteExample.buildDipendenteModel(), pageNo, pageSize, sortBy).getContent();
 		model.addAttribute("dipendente_list_attribute", DipendenteDTO.createDipendenteDTOListFromModelList(dipendenti));
 		return "admin/listDipendenti";
 	}

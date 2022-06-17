@@ -25,7 +25,7 @@
 			
 			<div class='card'>
 			    <div class='card-header'>
-			        <h5>Lista dei risultati</h5> 
+			        <h5>Lista dei dipendenti</h5> 
 			    </div>
 			    <div class='card-body'>
 			    	<a href="${pageContext.request.contextPath}/admin/searchDipendente" class='btn btn-outline-secondary' >

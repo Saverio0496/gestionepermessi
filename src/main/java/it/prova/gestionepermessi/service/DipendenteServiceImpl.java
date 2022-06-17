@@ -1,32 +1,49 @@
 package it.prova.gestionepermessi.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
+import javax.persistence.criteria.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import it.prova.gestionepermessi.model.Dipendente;
+import it.prova.gestionepermessi.model.StatoUtente;
 import it.prova.gestionepermessi.model.Utente;
 import it.prova.gestionepermessi.repository.dipendente.DipendenteRepository;
-
+import it.prova.gestionepermessi.repository.ruolo.RuoloRepository;
+import it.prova.gestionepermessi.repository.utente.UtenteRepository;
 
 @Service
 public class DipendenteServiceImpl implements DipendenteService {
 
 	@Autowired
-	private DipendenteRepository dipendenteRepository;
+	private UtenteRepository utenteRepository;
 	
+	@Autowired
+	private RuoloRepository ruoloRepository;
+	
+	@Autowired
+	private DipendenteRepository dipendenteRepository;
+
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 
 	@Override
 	public List<Dipendente> listAllDipendenti() {
@@ -46,63 +63,63 @@ public class DipendenteServiceImpl implements DipendenteService {
 		// da aggiornare
 		dipendenteRepository.save(dipendenteReloaded);
 	}
-
-
-	@Override
-	public void rimuovi(Dipendente dipendenteInstance) {
-		// TODO Auto-generated method stub
-
-	}
-
+	
 	@Override
 	public void inserisciNuovoConUtente(Dipendente dipendenteInstance, Utente utenteInstance) {
-	}
-	
-	@Transactional
-	public List<Dipendente> findByExample(Dipendente example) {
-	Map<String, Object> paramaterMap = new HashMap<String, Object>();
-	List<String> whereClauses = new ArrayList<String>();
-
-	StringBuilder queryBuilder = new StringBuilder("select d from Dipendente d where d.id = d.id ");
-
-	if (StringUtils.isNotEmpty(example.getNome())) {
-	whereClauses.add(" d.nome  like :nome ");
-	paramaterMap.put("nome", "%" + example.getNome() + "%");
-	}
-	if (StringUtils.isNotEmpty(example.getCognome())) {
-	whereClauses.add(" d.cognome like :cognome ");
-	paramaterMap.put("cognome", "%" + example.getCognome() + "%");
-	}
-	if (StringUtils.isNotEmpty(example.getEmail())) {
-	whereClauses.add(" d.email like :email ");
-	paramaterMap.put("email", "%" + example.getEmail() + "%");
-	}
-	if (example.getDataNascita() != null) {
-	whereClauses.add("d.dataNascita >= :dataNascita ");
-	paramaterMap.put("dataNascita", example.getDataNascita());
-	}
-	if (example.getDataAssunzione() != null) {
-	whereClauses.add("d.dataAssunzione >= :dataAssunzione ");
-	paramaterMap.put("dataAssunzione", example.getDataAssunzione());
-	}
-	if (example.getDataDimissioni() != null) {
-	whereClauses.add("d.dataDimissioni >= :dataDimissioni ");
-	paramaterMap.put("dataDimissioni", example.getDataDimissioni());
-	}
-	if (example.getSesso() != null) {
-	whereClauses.add(" d.sesso =:sesso ");
-	paramaterMap.put("sesso", example.getSesso());
+		utenteInstance.getRuoli().add(ruoloRepository.findByDescrizioneAndCodice("Dipendente User", "ROLE_DIPENDENTE_USER"));
+		utenteInstance.setStato(StatoUtente.CREATO);
+		utenteInstance.setUsername(dipendenteInstance.getNome().toLowerCase().charAt(0) + "." + dipendenteInstance.getCognome().toLowerCase());
+		utenteInstance.setPassword(passwordEncoder.encode("Password@01"));
+		utenteInstance.setDateCreated(new Date());
+		dipendenteInstance.setEmail(utenteInstance.getUsername() + "@prova.it");
+		dipendenteInstance.setUtente(utenteInstance);
+		utenteRepository.save(utenteInstance);
+		dipendenteRepository.save(dipendenteInstance);
 	}
 
-	queryBuilder.append(!whereClauses.isEmpty() ? " and " : "");
-	queryBuilder.append(StringUtils.join(whereClauses, " and "));
-	TypedQuery<Dipendente> typedQuery = entityManager.createQuery(queryBuilder.toString(), Dipendente.class);
+	@Override
+	@Transactional(readOnly = true)
+	public Page<Dipendente> findByExample(Dipendente example, Integer pageNo, Integer pageSize, String sortBy) {
+		Specification<Utente> specificationCriteria = (root, query, cb) -> {
 
-	for (String key : paramaterMap.keySet()) {
-	typedQuery.setParameter(key, paramaterMap.get(key));
-	}
+			List<Predicate> predicates = new ArrayList<Predicate>();
 
-	return typedQuery.getResultList();
+			if (StringUtils.isNotEmpty(example.getNome()))
+				predicates.add(cb.like(cb.upper(root.get("nome")), "%" + example.getNome().toUpperCase() + "%"));
+
+			if (StringUtils.isNotEmpty(example.getCognome()))
+				predicates.add(cb.like(cb.upper(root.get("cognome")), "%" + example.getCognome().toUpperCase() + "%"));
+
+			if (StringUtils.isNotEmpty(example.getCodFis()))
+				predicates.add(
+						cb.like(cb.upper(root.get("codFis")), "%" + example.getCodFis().toUpperCase() + "%"));
+
+			if (StringUtils.isNotEmpty(example.getEmail()))
+				predicates.add(cb.like(cb.upper(root.get("email")), "%" + example.getEmail().toUpperCase() + "%"));
+
+			if (example.getSesso() != null)
+				predicates.add(cb.equal(root.get("sesso"), example.getSesso()));
+
+			if (example.getDataNascita() != null)
+				predicates.add(cb.greaterThanOrEqualTo(root.get("dataNascita"), example.getDataNascita()));
+
+			if (example.getDataAssunzione() != null)
+				predicates.add(cb.greaterThanOrEqualTo(root.get("dataAssunzione"), example.getDataAssunzione()));
+
+			if (example.getDataDimissioni() != null)
+				predicates.add(cb.greaterThanOrEqualTo(root.get("dataDimissioni"), example.getDataDimissioni()));
+
+			return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+		};
+
+		Pageable paging = null;
+		// se non passo parametri di paginazione non ne tengo conto
+		if (pageSize == null || pageSize < 10)
+			paging = Pageable.unpaged();
+		else
+			paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+
+		return dipendenteRepository.findAll(specificationCriteria, paging);
 	}
 
 }
