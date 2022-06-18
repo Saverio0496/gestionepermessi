@@ -15,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,53 +33,62 @@ public class DipendenteServiceImpl implements DipendenteService {
 	
 	@Autowired
 	private UtenteRepository utenteRepository;
-	
+
 	@Autowired
 	private RuoloRepository ruoloRepository;
-	
+
 	@Autowired
 	private DipendenteRepository dipendenteRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
 
 	@Override
+	@Transactional
 	public List<Dipendente> listAllDipendenti() {
 		return (List<Dipendente>) dipendenteRepository.findAll();
 	}
 
 	@Override
+	@Transactional
 	public Dipendente caricaSingoloDipendente(Long id) {
 		return dipendenteRepository.findById(id).orElse(null);
 	}
 
 	@Override
+	@Transactional
 	public void aggiorna(Dipendente dipendenteInstance) {
-		Dipendente dipendenteReloaded = dipendenteRepository.findById(dipendenteInstance.getId()).orElse(null);
-		if (dipendenteReloaded == null)
-			throw new RuntimeException("Elemento non trovato");
-		// da aggiornare
-		dipendenteRepository.save(dipendenteReloaded);
+		Dipendente dipendenteReloaded = dipendenteRepository.findByIdConUtente(dipendenteInstance.getId()).orElse(null);
+		if (dipendenteReloaded == null || dipendenteReloaded.getUtente() == null) {
+			throw new RuntimeException("Elemento non trovato.");
+		}
+		
+		dipendenteInstance.setUtente(dipendenteReloaded.getUtente());
+		dipendenteInstance.getUtente().setUsername(dipendenteInstance.getNome().toLowerCase().charAt(0) + "." + dipendenteInstance.getCognome().toLowerCase());
+		dipendenteInstance.setEmail(dipendenteInstance.getUtente().getUsername() + "@prova.it");
+		
+		utenteRepository.save(dipendenteInstance.getUtente());
+		dipendenteRepository.save(dipendenteInstance);
 	}
-	
+
 	@Override
+	@Transactional
 	public void inserisciNuovo(Dipendente dipendente) {
 		dipendenteRepository.save(dipendente);
 	}
-	
+
 	@Override
+	@Transactional
 	public void inserisciNuovoConUtente(Dipendente dipendenteInstance, Utente utenteInstance) {
-		utenteInstance.getRuoli().add(ruoloRepository.findByDescrizioneAndCodice("Dipendente User", "ROLE_DIPENDENTE_USER"));
+		utenteInstance.getRuoli()
+				.add(ruoloRepository.findByDescrizioneAndCodice("Dipendente User", "ROLE_DIPENDENTE_USER"));
 		utenteInstance.setStato(StatoUtente.CREATO);
-		utenteInstance.setUsername(dipendenteInstance.getNome().toLowerCase().charAt(0) + "." + dipendenteInstance.getCognome().toLowerCase());
+		utenteInstance.setUsername(dipendenteInstance.getNome().toLowerCase().charAt(0) + "."
+				+ dipendenteInstance.getCognome().toLowerCase());
 		utenteInstance.setDateCreated(new Date());
 		dipendenteInstance.setEmail(utenteInstance.getUsername() + "@prova.it");
 		dipendenteInstance.setUtente(utenteInstance);
-		utenteService.inserisciNuovoConDipendente(utenteInstance,dipendenteInstance);
+		utenteService.inserisciNuovoConDipendente(utenteInstance, dipendenteInstance);
 		dipendenteRepository.save(dipendenteInstance);
 	}
 
@@ -98,8 +106,7 @@ public class DipendenteServiceImpl implements DipendenteService {
 				predicates.add(cb.like(cb.upper(root.get("cognome")), "%" + example.getCognome().toUpperCase() + "%"));
 
 			if (StringUtils.isNotEmpty(example.getCodFis()))
-				predicates.add(
-						cb.like(cb.upper(root.get("codFis")), "%" + example.getCodFis().toUpperCase() + "%"));
+				predicates.add(cb.like(cb.upper(root.get("codFis")), "%" + example.getCodFis().toUpperCase() + "%"));
 
 			if (StringUtils.isNotEmpty(example.getEmail()))
 				predicates.add(cb.like(cb.upper(root.get("email")), "%" + example.getEmail().toUpperCase() + "%"));
@@ -127,6 +134,12 @@ public class DipendenteServiceImpl implements DipendenteService {
 			paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 
 		return dipendenteRepository.findAll(specificationCriteria, paging);
+	}
+
+	@Override
+	@Transactional
+	public Dipendente caricaSingoloDipendenteConUtente(Long id) {
+		return dipendenteRepository.findByIdConUtente(id).orElse(null);
 	}
 
 }

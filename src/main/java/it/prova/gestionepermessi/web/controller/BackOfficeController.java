@@ -2,6 +2,7 @@ package it.prova.gestionepermessi.web.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +87,26 @@ public class BackOfficeController {
 		utente.setDipendente(dipendente);
 
 		dipendenteService.inserisciNuovoConUtente(dipendente, utente);
+
+		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
+		return "redirect:/backoffice/listDipendente";
+	}
+
+	@GetMapping("/editDipendente/{idDipendente}")
+	public String edit(@PathVariable(required = true) Long idDipendente, Model model) {
+		Dipendente dipendenteModel = dipendenteService.caricaSingoloDipendente(idDipendente);
+		model.addAttribute("edit_dipendente_attr", DipendenteDTO.buildDipendenteDTOFromModel(dipendenteModel));
+		return "backoffice/editDipendente";
+	}
+
+	@PostMapping("/updateDipendente")
+	public String update(@Valid DipendenteDTO dipendenteDTO, BindingResult result, Model model, RedirectAttributes redirectAttrs,
+			HttpServletRequest request) {
+
+		if (result.hasErrors()) {
+			return "backoffice/editDipendente";
+		}
+		dipendenteService.aggiorna(dipendenteDTO.buildDipendenteModel());
 
 		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
 		return "redirect:/backoffice/listDipendente";

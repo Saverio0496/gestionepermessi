@@ -95,6 +95,34 @@
 			      	</div>
 			  		</div>
 			      </sec:authorize>
+			      <sec:authorize access="hasRole('BO_USER')">
+			  			<div class="container px-4 py-5" id="featured-3">
+			    		<div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+			      		<div class="feature col">
+			        	<div class="feature-icon bg-primary bg-gradient">
+			          	<svg class="bi" width="1em" height="1em"><use xlink:href="#collection"/></svg>
+			        	</div>
+			        	<h2>Ricerca Richieste Permessi</h2>
+			        	<p>Da qui potrai accedere alla ricerca delle richieste permessi.</p>
+			        	<a href="${pageContext.request.contextPath}/backoffice/searchRichiestaPermesso" class="icon-link">
+			          	Vai alla funzionalità
+			          	<svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"/></svg>
+			        	</a>
+			      	</div>
+			      	<div class="feature col">
+			        <div class="feature-icon bg-primary bg-gradient">
+			          	<svg class="bi" width="1em" height="1em"><use xlink:href="#people-circle"/></svg>
+			        </div>
+			        	<h2>Ricerca Messaggi</h2>
+			        	<p>Da qui potrai accedere alla ricerca dei messaggi e da lì alle altre funzionalità.</p>
+			        	<a href="${pageContext.request.contextPath}/backoffice/searchMessaggio" class="icon-link">
+			          	Vai alla funzionalità
+			          	<svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"/></svg>
+			        	</a>
+			      	</div>
+			      	</div>
+			  		</div>
+			      </sec:authorize>
 			      <sec:authorize access="hasRole('DIPENDENTE_USER')">
 			      	<div class="container px-4 py-5" id="featured-3">
 			    	<div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
