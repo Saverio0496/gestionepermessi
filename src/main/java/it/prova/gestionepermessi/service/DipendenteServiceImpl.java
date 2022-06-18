@@ -30,6 +30,9 @@ import it.prova.gestionepermessi.repository.utente.UtenteRepository;
 public class DipendenteServiceImpl implements DipendenteService {
 
 	@Autowired
+	private UtenteService utenteService;
+	
+	@Autowired
 	private UtenteRepository utenteRepository;
 	
 	@Autowired
@@ -65,15 +68,19 @@ public class DipendenteServiceImpl implements DipendenteService {
 	}
 	
 	@Override
+	public void inserisciNuovo(Dipendente dipendente) {
+		dipendenteRepository.save(dipendente);
+	}
+	
+	@Override
 	public void inserisciNuovoConUtente(Dipendente dipendenteInstance, Utente utenteInstance) {
 		utenteInstance.getRuoli().add(ruoloRepository.findByDescrizioneAndCodice("Dipendente User", "ROLE_DIPENDENTE_USER"));
 		utenteInstance.setStato(StatoUtente.CREATO);
 		utenteInstance.setUsername(dipendenteInstance.getNome().toLowerCase().charAt(0) + "." + dipendenteInstance.getCognome().toLowerCase());
-		utenteInstance.setPassword(passwordEncoder.encode("Password@01"));
 		utenteInstance.setDateCreated(new Date());
 		dipendenteInstance.setEmail(utenteInstance.getUsername() + "@prova.it");
 		dipendenteInstance.setUtente(utenteInstance);
-		utenteRepository.save(utenteInstance);
+		utenteService.inserisciNuovoConDipendente(utenteInstance,dipendenteInstance);
 		dipendenteRepository.save(dipendenteInstance);
 	}
 

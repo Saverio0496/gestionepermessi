@@ -76,7 +76,7 @@ public class UtenteServiceImpl implements UtenteService {
 	@Transactional
 	public void inserisciNuovoConDipendente(Utente utenteInstance, Dipendente dipendenteInstance) {
 		utenteInstance.setStato(StatoUtente.CREATO);
-		utenteInstance.setPassword(passwordEncoder.encode(utenteInstance.getPassword()));
+		utenteInstance.setPassword(passwordEncoder.encode("Password@01"));
 		utenteInstance.setDateCreated(new Date());
 		utenteRepository.save(utenteInstance);
 		dipendenteRepository.save(dipendenteInstance);
