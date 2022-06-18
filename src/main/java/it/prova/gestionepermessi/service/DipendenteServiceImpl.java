@@ -44,13 +44,13 @@ public class DipendenteServiceImpl implements DipendenteService {
 	private EntityManager entityManager;
 
 	@Override
-	@Transactional
+	@Transactional(readOnly = true)
 	public List<Dipendente> listAllDipendenti() {
 		return (List<Dipendente>) dipendenteRepository.findAll();
 	}
 
 	@Override
-	@Transactional
+	@Transactional(readOnly = true)
 	public Dipendente caricaSingoloDipendente(Long id) {
 		return dipendenteRepository.findById(id).orElse(null);
 	}
@@ -140,6 +140,12 @@ public class DipendenteServiceImpl implements DipendenteService {
 	@Transactional
 	public Dipendente caricaSingoloDipendenteConUtente(Long id) {
 		return dipendenteRepository.findByIdConUtente(id).orElse(null);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Dipendente cercaPerUsername(String username) {
+		return dipendenteRepository.findByUsername(username).orElse(null);
 	}
 
 }

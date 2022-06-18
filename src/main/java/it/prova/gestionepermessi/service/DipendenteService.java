@@ -17,10 +17,12 @@ public interface DipendenteService {
 
 	public void aggiorna(Dipendente dipendenteInstance);
 	
-	void inserisciNuovo(Dipendente dipendente);
+	public void inserisciNuovo(Dipendente dipendente);
 	
 	public void inserisciNuovoConUtente(Dipendente dipendenteInstance, Utente utenteInstance);
 
 	public Page<Dipendente> findByExample(Dipendente example, Integer pageNo, Integer pageSize, String sortBy);
+
+	Dipendente cercaPerUsername(String username);
 
 }
