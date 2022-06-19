@@ -58,7 +58,23 @@ public class RichiestaPermessoServiceImpl implements RichiestaPermessoService {
 
 	@Override
 	@Transactional
-	public void aggiorna(RichiestaPermesso richiestaPermessoInstance) {
+	public void aggiorna(Long idRichiestapermesso, MultipartFile file) {
+		RichiestaPermesso richiestaPermessoReloaded= richiestaPermessoRepository.findByAttachment_id(idRichiestapermesso);
+		if(file!=null) {
+			Attachment attachment= new Attachment();
+			attachment.setNomeFile(file.getOriginalFilename());
+			attachment.setContentType(file.getContentType());
+			try {
+				attachment.setPayload(file.getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			attachmentRepository.save(attachment);
+			richiestaPermessoReloaded.setAttachment( attachment);
+			richiestaPermessoRepository.save(richiestaPermessoReloaded);
+			return;
+		}
+		richiestaPermessoRepository.save(richiestaPermessoReloaded);
 	}
 
 	@Override
@@ -140,5 +156,57 @@ public class RichiestaPermessoServiceImpl implements RichiestaPermessoService {
 	@Transactional(readOnly = true)
 	public RichiestaPermesso caricaSingolaRichiestaPermessoEager(Long id) {
 		return richiestaPermessoRepository.findByIdEager(id);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public RichiestaPermesso caricaSingolaRichiestaConAttachment(Long id) {
+		return richiestaPermessoRepository.findByAttachment_id(id);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Page<RichiestaPermesso> findByExamplePerBO(RichiestaPermessoSearchDTO example, Integer pageNo, Integer pageSize,
+			String sortBy) {
+		Specification<RichiestaPermesso> specificationCriteria = (root, query, cb) -> {
+
+			List<Predicate> predicates = new ArrayList<Predicate>();
+			
+			root.fetch("dipendente", JoinType.INNER);
+			
+			if(StringUtils.isNotEmpty(example.getCodiceCertificato()))
+				predicates.add(cb.like(cb.upper(root.get("CodiceCertificato")), "%"+ example.getCodiceCertificato().toUpperCase()+"%" ));
+			
+			if (example.getDataInizio() != null)
+				predicates.add(cb.greaterThanOrEqualTo(root.get("dataInizio"), example.getDataInizio()));
+			
+			if (example.getDataFine() != null)
+				predicates.add(cb.greaterThanOrEqualTo(root.get("dataFine"), example.getDataFine()));
+			
+			if (example.getTipoPermesso() != null)
+				predicates.add(cb.equal(root.get("tipoPermesso"), example.getTipoPermesso()));
+		
+			if (example.getDipendente() != null && example.getDipendente().getId() != null) {
+				predicates.add(
+						cb.equal(root.join("dipendente").get("id"), example.getDipendente().getId()));
+			}
+			query.distinct(true);
+			return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+		};
+
+		Pageable paging = null;
+		// se non passo parametri di paginazione non ne tengo conto
+		if (pageSize == null || pageSize < 10)
+			paging = Pageable.unpaged();
+		else
+			paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+
+		return richiestaPermessoRepository.findAll(specificationCriteria, paging);
+	}
+	
+	@Override
+	@Transactional
+	public void aggiorna(RichiestaPermesso richiestaModel) {
+		richiestaPermessoRepository.save(richiestaModel);
 	}
 }

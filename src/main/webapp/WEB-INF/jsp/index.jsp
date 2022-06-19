@@ -55,11 +55,11 @@
 				        <p class="col-md-8 fs-4">Portale innovativo per le richieste dei permessi lavorativi!</p>
 		   				 <sec:authorize access="hasRole('BO_USER')">
 		          				<a class="btn btn-primary btn-lg" href="${pageContext.request.contextPath}/backoffice/searchDipendente">Vai a Ricerca Dipendenti</a>
-		          				<a class="btn btn-primary btn-lg" href="${pageContext.request.contextPath}/richiestapermesso/search">Vai a Ricerca Richiesta Permesso</a>
-		          				<a class="btn btn-primary btn-lg" href="${pageContext.request.contextPath}/messaggio/search">Vai a Ricerca Messaggi</a>
+		          				<a class="btn btn-primary btn-lg" href="${pageContext.request.contextPath}/backoffice/searchRichiestaPermesso">Vai a Ricerca Richiesta Permesso</a>
+		          				<a class="btn btn-primary btn-lg" href="${pageContext.request.contextPath}/backoffice/searchRichiestaMessaggio">Vai a Ricerca Messaggi</a>
 		   				</sec:authorize>
 		   				 <sec:authorize access="hasRole('DIPENDENTE_USER')">
-		          				<a class="btn btn-primary btn-lg" href="${pageContext.request.contextPath}/richiestapermesso/search">Vai a Ricerca Richiesta Permesso</a>
+		          				<a class="btn btn-primary btn-lg" href="${pageContext.request.contextPath}/dipendente/searchRichiestaPermesso">Vai a Ricerca Richiesta Permesso</a>
 		   				</sec:authorize>
 				      </div>
 			    </div>
@@ -132,7 +132,7 @@
 			        </div>
 			        	<h2>Ricerca Richieste Permessi</h2>
 			        	<p>Da qui potrai accedere alla ricerca delle richieste permessi e da lì alle altre funzionalità.</p>
-			       	 	<a href="${pageContext.request.contextPath}/richiestapermesso/search" class="icon-link">
+			       	 	<a href="${pageContext.request.contextPath}/dipendente/searchRichiestaPermesso" class="icon-link">
 			          	Vai alla funzionalità
 			          	<svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"/></svg>
 			        	</a>

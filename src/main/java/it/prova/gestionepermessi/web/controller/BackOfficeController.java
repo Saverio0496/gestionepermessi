@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -19,10 +21,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import it.prova.gestionepermessi.dto.AttachmentDTO;
 import it.prova.gestionepermessi.dto.DipendenteDTO;
+import it.prova.gestionepermessi.dto.RichiestaPermessoDTO;
+import it.prova.gestionepermessi.dto.RichiestaPermessoSearchDTO;
+import it.prova.gestionepermessi.model.Attachment;
 import it.prova.gestionepermessi.model.Dipendente;
+import it.prova.gestionepermessi.model.RichiestaPermesso;
 import it.prova.gestionepermessi.model.Utente;
+import it.prova.gestionepermessi.service.AttachmentService;
 import it.prova.gestionepermessi.service.DipendenteService;
+import it.prova.gestionepermessi.service.RichiestaPermessoService;
 import it.prova.gestionepermessi.validator.DipendenteValidator;
 
 @Controller
@@ -34,6 +43,12 @@ public class BackOfficeController {
 
 	@Autowired
 	private DipendenteService dipendenteService;
+	
+	@Autowired
+	private RichiestaPermessoService richiestaPermessoService;
+	
+	@Autowired
+	private AttachmentService attachmentService;
 
 	@GetMapping("/searchDipendente")
 	public String searchDipendente(Model model) {
@@ -111,5 +126,46 @@ public class BackOfficeController {
 		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
 		return "redirect:/backoffice/listDipendente";
 	}
+	
+	@GetMapping("/listRichiestePermesso")
+	public ModelAndView listRichiestePermesso() {
+		ModelAndView mv = new ModelAndView();
+		List<RichiestaPermesso> dipendenti = richiestaPermessoService.listAllRichiestePermessi();
+		mv.addObject("richiestapermesso_dipendente_list_attribute", RichiestaPermessoDTO.createRichiestePermessiListDTOFromModelList(dipendenti));
+		mv.setViewName("backoffice/listRichiestePermessi");
+		return mv;
+	}
+	
+	@GetMapping("/searchRichiestaPermesso")
+	public String searchRichieste(ModelMap model) {
+		model.addAttribute("search_richiestapermesso_dipendente_attr",
+				DipendenteDTO.createDipendenteDTOListFromModelList(dipendenteService.listAllDipendenti()));
+		model.addAttribute("search_richiestapermesso_attr", new RichiestaPermessoDTO());
+		return "backoffice/searchRichiestaPermesso";
+	}
+	
+	@PostMapping("/listForSearchRichiestaPermesso")
+	public String list(RichiestaPermessoSearchDTO richiestaPermesso, @RequestParam(defaultValue = "0") Integer pageNo,
+			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "id") String sortBy,
+			ModelMap model) {
+		
+		Authentication  utenteInPagina= SecurityContextHolder.getContext().getAuthentication();
+		Dipendente dipendente= dipendenteService.cercaPerUsername(utenteInPagina.getName());
+		richiestaPermesso.setDipendente(dipendente);
+		List<RichiestaPermesso> richiestePermessi = richiestaPermessoService.findByExamplePerBO(richiestaPermesso, pageNo, pageSize, sortBy).getContent();
+		model.addAttribute("richiestapermesso_dipendente_list_attribute", RichiestaPermessoDTO.createRichiestePermessiListDTOFromModelList(richiestePermessi));
+		return "backoffice/listRichiestePermessi";
+	}
+	
+	@GetMapping("/approva/{idRichiesta}")
+	public String cambiaStato(@PathVariable(required = true) Long idRichiesta, Model model) {
+		RichiestaPermesso richiestaModel = richiestaPermessoService.caricaSingolaRichiestaPermessoEager(idRichiesta);
 
+		richiestaModel.setApprovato(!richiestaModel.isApprovato());
+		richiestaPermessoService.aggiorna(richiestaModel);
+
+		return "backoffice/listRichiestePermessi";
+	}
+	
+	
 }

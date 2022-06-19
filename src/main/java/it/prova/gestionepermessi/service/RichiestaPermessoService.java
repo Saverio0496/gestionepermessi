@@ -16,8 +16,6 @@ public interface RichiestaPermessoService {
 
 	public RichiestaPermesso caricaSingolaRichiestaPermesso(Long id);
 
-	public void aggiorna(RichiestaPermesso richiestaPermessoInstance);
-	
 	public void inserisciNuovo(RichiestaPermesso richiestaPermessoInstance, boolean giornoUnico,  MultipartFile file);
 	
 	public Page<RichiestaPermesso> findByExample(RichiestaPermessoSearchDTO example, Integer pageNo, Integer pageSize, String sortBy);
@@ -25,5 +23,13 @@ public interface RichiestaPermessoService {
 	public void rimuovi(Long idRichiesta);
 
 	public RichiestaPermesso caricaSingolaRichiestaPermessoEager(Long id);
+
+	public RichiestaPermesso caricaSingolaRichiestaConAttachment(Long idRichiestaPermesso);
+
+	public void aggiorna(Long idRichiestapermesso, MultipartFile file);
+
+	Page<RichiestaPermesso> findByExamplePerBO(RichiestaPermessoSearchDTO example, Integer pageNo, Integer pageSize, String sortBy);
+
+	public void aggiorna(RichiestaPermesso richiestaModel);
 
 }

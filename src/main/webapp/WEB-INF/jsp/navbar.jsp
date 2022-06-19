@@ -34,13 +34,14 @@
 		        	</div>
 		      	</li>
 		      	<li class="nav-item">
-            		<a class="nav-link active" aria-current="page" href="${pageContext.request.contextPath}/dipendente/searchRichiestaPermesso">Ricerca Richieste Permesso</a>
+            		<a class="nav-link active" aria-current="page" href="${pageContext.request.contextPath}/backoffice/searchRichiestaPermesso">Ricerca Richieste Permesso</a>
+            		<a class="dropdown-item" href="${pageContext.request.contextPath}/backoffice/listRichiestePermesso">Lista Richieste Permessi</a>
           		</li>
           		<li class="nav-item dropdown">
 		        	<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestione Messaggi</a>
 		        	<div class="dropdown-menu" aria-labelledby="dropdown01">
-		        		<a class="dropdown-item" href="${pageContext.request.contextPath}/messaggio/">Lista Messaggi</a>
-		          		<a class="dropdown-item" href="${pageContext.request.contextPath}/messaggio/search">Ricerca Messaggi</a>
+		        		<a class="dropdown-item" href="${pageContext.request.contextPath}/backoffice/listMessaggio">Lista Messaggi</a>
+		          		<a class="dropdown-item" href="${pageContext.request.contextPath}/backoffice/searchMessaggio">Ricerca Messaggi</a>
 		        	</div>
 		      	</li>
 		   </sec:authorize>
