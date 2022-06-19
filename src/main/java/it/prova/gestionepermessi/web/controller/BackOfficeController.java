@@ -23,14 +23,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.prova.gestionepermessi.dto.AttachmentDTO;
 import it.prova.gestionepermessi.dto.DipendenteDTO;
+import it.prova.gestionepermessi.dto.MessaggioDTO;
 import it.prova.gestionepermessi.dto.RichiestaPermessoDTO;
 import it.prova.gestionepermessi.dto.RichiestaPermessoSearchDTO;
 import it.prova.gestionepermessi.model.Attachment;
 import it.prova.gestionepermessi.model.Dipendente;
+import it.prova.gestionepermessi.model.Messaggio;
 import it.prova.gestionepermessi.model.RichiestaPermesso;
 import it.prova.gestionepermessi.model.Utente;
 import it.prova.gestionepermessi.service.AttachmentService;
 import it.prova.gestionepermessi.service.DipendenteService;
+import it.prova.gestionepermessi.service.MessaggioService;
 import it.prova.gestionepermessi.service.RichiestaPermessoService;
 import it.prova.gestionepermessi.validator.DipendenteValidator;
 
@@ -48,7 +51,7 @@ public class BackOfficeController {
 	private RichiestaPermessoService richiestaPermessoService;
 	
 	@Autowired
-	private AttachmentService attachmentService;
+	private MessaggioService messaggioService;
 
 	@GetMapping("/searchDipendente")
 	public String searchDipendente(Model model) {
@@ -173,6 +176,16 @@ public class BackOfficeController {
 				richiestaPermessoService.caricaSingolaRichiestaPermessoEager(idRichiestaPermesso));
 		return "backoffice/showRichiestaPermesso";
 	}
+	
+	@GetMapping("/listMessaggio")
+	public ModelAndView listAllMessaggi() {
+		ModelAndView mv = new ModelAndView();
+		List<Messaggio> dipendenti = messaggioService.listAllMessaggi();
+		mv.addObject("messaggio_list_attribute", MessaggioDTO.buildMessaggioDTOFromModelList(dipendenti));
+		mv.setViewName("backoffice/listMessaggi");
+		return mv;
+	}
+	
 	
 	
 }

@@ -1,6 +1,7 @@
 package it.prova.gestionepermessi.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,12 @@ public class MessaggioServiceImpl implements MessaggioService {
 	
 	@Autowired
 	private MessaggioRepository messaggioRepository;
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<Messaggio> listAllMessaggi() {
+		return (List<Messaggio>) messaggioRepository.findAll();
+	}
 
 	@Override
 	@Transactional
