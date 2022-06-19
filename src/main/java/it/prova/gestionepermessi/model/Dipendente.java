@@ -57,6 +57,10 @@ public class Dipendente {
 	public Dipendente() {
 	}
 
+	public Dipendente(Long id) {
+		this.id = id;
+	}
+
 	public Dipendente(Long id, String nome, String cognome, String codFis, String email, Date dataNascita,
 			Date dataAssunzione, Date dataDimissioni, Sesso sesso, @NotNull Utente utente,
 			Set<RichiestaPermesso> richiestePermessi) {

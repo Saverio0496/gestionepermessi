@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import it.prova.gestionepermessi.model.Dipendente;
 import it.prova.gestionepermessi.model.RichiestaPermesso;
 import it.prova.gestionepermessi.model.TipoPermesso;
 
@@ -150,6 +151,15 @@ public class RichiestaPermessoDTO {
 			List<RichiestaPermesso> richieste) {
 		return richieste.stream().map(richiesta -> RichiestaPermessoDTO.buildRichiestaPermessoDTOFromModel(richiesta))
 				.collect(Collectors.toList());
+	}
+	
+	public RichiestaPermesso buildRichiestaPermessoModel(boolean includesDipendente) {
+		RichiestaPermesso result = new RichiestaPermesso(this.id, this.tipoPermesso, this.dataInizio, this.dataFine, this.approvato,
+				this.codiceCertificato, this.note);
+		if (includesDipendente && dipendenteId != null) {
+			result.setDipendente(new Dipendente(this.dipendenteId));
+		}
+		return result;
 	}
 
 }

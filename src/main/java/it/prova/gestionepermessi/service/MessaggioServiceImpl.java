@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import it.prova.gestionepermessi.model.Messaggio;
 import it.prova.gestionepermessi.model.RichiestaPermesso;
@@ -15,6 +16,8 @@ public class MessaggioServiceImpl implements MessaggioService {
 	@Autowired
 	private MessaggioRepository messaggioRepository;
 
+	@Override
+	@Transactional
 	public void inserisciNuovo(Messaggio messaggioInstance, RichiestaPermesso richiestaInstance) {
 		String note = richiestaInstance.getNote().isBlank() ? "" : " , le note del dipendente " + richiestaInstance.getNote();
 		String codiceCertificato = richiestaInstance.getCodiceCertificato().isBlank() ? ""
@@ -43,6 +46,19 @@ public class MessaggioServiceImpl implements MessaggioService {
 		messaggioInstance.setRichiestaPermesso(richiestaInstance);
 
 		messaggioRepository.save(messaggioInstance);
+	}
+
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Messaggio cercaPerIdRichiesta(Long idRichiesta) {
+		return messaggioRepository.findByRichiestaPermesso_Id(idRichiesta);
+	}
+	
+	@Override
+	@Transactional
+	public void rimuovi(Messaggio messaggio) {
+		messaggioRepository.delete(messaggio);
 	}
 
 }

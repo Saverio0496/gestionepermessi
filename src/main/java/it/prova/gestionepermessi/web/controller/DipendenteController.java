@@ -1,6 +1,7 @@
 package it.prova.gestionepermessi.web.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -9,16 +10,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.prova.gestionepermessi.dto.RichiestaPermessoDTO;
+import it.prova.gestionepermessi.dto.RichiestaPermessoSearchDTO;
 import it.prova.gestionepermessi.model.Dipendente;
 import it.prova.gestionepermessi.model.RichiestaPermesso;
 import it.prova.gestionepermessi.service.DipendenteService;
@@ -33,7 +37,7 @@ public class DipendenteController {
 
 	@Autowired
 	private DipendenteService dipendenteService;
-
+	
 	@GetMapping("/listRichiestaPermesso")
 	public ModelAndView listAllRichiestePermessi() {
 		ModelAndView mv = new ModelAndView();
@@ -88,5 +92,48 @@ public class DipendenteController {
 				richiestaPermessoService.caricaSingolaRichiestaPermesso(idRichiestaPermesso));
 		return "dipendente/showRichiestaPermesso";
 	}
+	
+	@GetMapping("/searchRichiestaPermesso")
+	public String search(Model model) {
+		model.addAttribute("search_richiesta_attr", new RichiestaPermessoDTO());
+		
+		return "dipendente/searchRichiestaPermesso";
+	}
+	
+	@PostMapping("/listForSearchRichiestaPermesso")
+	public String list(RichiestaPermessoSearchDTO richiestaPermesso, @RequestParam(defaultValue = "0") Integer pageNo,
+			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "id") String sortBy,
+			ModelMap model) {
+		
+		Authentication  utenteInPagina= SecurityContextHolder.getContext().getAuthentication();
+		Dipendente dipendente= dipendenteService.cercaPerUsername(utenteInPagina.getName());
+		Long id= dipendente.getId();
+		List<RichiestaPermesso> richiestePermessi = richiestaPermessoService.findByExample(richiestaPermesso, pageNo, pageSize, sortBy).getContent().stream().filter(richiesta -> richiesta.getDipendente().getId() == id)
+				.collect(Collectors.toList());;
+		model.addAttribute("richiestapermesso_dipendente_list_attribute", RichiestaPermessoDTO.createRichiestePermessiListDTOFromModelList(richiestePermessi));
+		return "dipendente/listRichiestePermessi";
+	}
+	
+	@GetMapping("/deleteRichiestaPermesso/{idRichiestaPermesso}")
+	public String delete(@PathVariable(required = true) Long idRichiestaPermesso, Model model) {
+		RichiestaPermesso richiestaModel = richiestaPermessoService.caricaSingolaRichiestaPermesso(idRichiestaPermesso);
+
+		model.addAttribute("delete_richiestapermesso_attr",
+				RichiestaPermessoDTO.buildRichiestaPermessoDTOFromModel(richiestaModel));
+
+		return "dipendente/deleteRichiestaPermesso";
+	}
+	
+	@PostMapping("/removeRichiestaPermesso")
+	public String remove(@RequestParam(required = true) Long idRichiestaPermesso, RedirectAttributes redirectAttrs) {
+		
+		richiestaPermessoService.rimuovi(idRichiestaPermesso);
+		
+		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
+		return "redirect:/dipendente/listRichiestePermessi";
+	}
+	
+	
+	
 
 }
