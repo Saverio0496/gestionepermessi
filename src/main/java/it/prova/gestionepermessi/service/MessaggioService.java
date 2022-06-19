@@ -9,6 +9,7 @@ public interface MessaggioService {
 
 	public Messaggio cercaPerIdRichiesta(Long idRichiestaPermesso);
 
-	public void rimuovi(Messaggio messaggio);
+	public void rimuovi(Long idMessaggio);
+
 
 }

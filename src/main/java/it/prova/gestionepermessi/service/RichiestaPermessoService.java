@@ -24,4 +24,6 @@ public interface RichiestaPermessoService {
 
 	public void rimuovi(Long idRichiesta);
 
+	public RichiestaPermesso caricaSingolaRichiestaPermessoEager(Long id);
+
 }

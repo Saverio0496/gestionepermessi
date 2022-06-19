@@ -24,7 +24,6 @@ import it.prova.gestionepermessi.model.Attachment;
 import it.prova.gestionepermessi.model.Messaggio;
 import it.prova.gestionepermessi.model.RichiestaPermesso;
 import it.prova.gestionepermessi.repository.attachment.AttachmentRepository;
-import it.prova.gestionepermessi.repository.messaggio.MessaggioRepository;
 import it.prova.gestionepermessi.repository.richiestapermesso.RichiestaPermessoRepository;
 
 @Service
@@ -39,9 +38,6 @@ public class RichiestaPermessoServiceImpl implements RichiestaPermessoService {
 	@Autowired
 	private AttachmentRepository attachmentRepository;
 	
-	@Autowired
-	private MessaggioRepository messaggioRepository;
-
 	@Override
 	@Transactional(readOnly = true)
 	public List<RichiestaPermesso> listAllRichiestePermessi() {
@@ -136,20 +132,13 @@ public class RichiestaPermessoServiceImpl implements RichiestaPermessoService {
 	@Override
 	@Transactional
 	public void rimuovi(Long idRichiesta) {
-		RichiestaPermesso richiestaPermessoDaEliminare = richiestaPermessoRepository.findByIdEager(idRichiesta);
+		richiestaPermessoRepository.deleteById(idRichiesta);
 		
-		for(RichiestaPermesso richiestaItem : richiestaPermessoDaEliminare.getDipendente().getRichiestePermessi()) {
-			if(richiestaItem.getId() == idRichiesta) 
-				richiestaPermessoDaEliminare.getDipendente().getRichiestePermessi().remove(richiestaItem);
-		}
-		
-		attachmentRepository.delete(richiestaPermessoDaEliminare.getAttachment());
-		
-		Messaggio messaggio = messaggioRepository.findByRichiestaPermesso_Id(idRichiesta);
-		
-		messaggioRepository.delete(messaggio);
-		
-		richiestaPermessoRepository.delete(richiestaPermessoDaEliminare);
-		
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public RichiestaPermesso caricaSingolaRichiestaPermessoEager(Long id) {
+		return richiestaPermessoRepository.findByIdEager(id);
 	}
 }

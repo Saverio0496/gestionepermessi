@@ -57,8 +57,8 @@ public class MessaggioServiceImpl implements MessaggioService {
 	
 	@Override
 	@Transactional
-	public void rimuovi(Messaggio messaggio) {
-		messaggioRepository.delete(messaggio);
+	public void rimuovi(Long idMessaggio) {
+		messaggioRepository.deleteById(idMessaggio);
 	}
 
 }

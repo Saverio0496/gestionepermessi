@@ -24,8 +24,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import it.prova.gestionepermessi.dto.RichiestaPermessoDTO;
 import it.prova.gestionepermessi.dto.RichiestaPermessoSearchDTO;
 import it.prova.gestionepermessi.model.Dipendente;
+import it.prova.gestionepermessi.model.Messaggio;
 import it.prova.gestionepermessi.model.RichiestaPermesso;
+import it.prova.gestionepermessi.service.AttachmentService;
 import it.prova.gestionepermessi.service.DipendenteService;
+import it.prova.gestionepermessi.service.MessaggioService;
 import it.prova.gestionepermessi.service.RichiestaPermessoService;
 
 @Controller
@@ -37,6 +40,12 @@ public class DipendenteController {
 
 	@Autowired
 	private DipendenteService dipendenteService;
+	
+	@Autowired
+	private MessaggioService messaggioService;
+	
+//	@Autowired
+//	private AttachmentService attachmentService;
 	
 	@GetMapping("/listRichiestaPermesso")
 	public ModelAndView listAllRichiestePermessi() {
@@ -114,26 +123,36 @@ public class DipendenteController {
 		return "dipendente/listRichiestePermessi";
 	}
 	
-	@GetMapping("/deleteRichiestaPermesso/{idRichiestaPermesso}")
-	public String delete(@PathVariable(required = true) Long idRichiestaPermesso, Model model) {
-		RichiestaPermesso richiestaModel = richiestaPermessoService.caricaSingolaRichiestaPermesso(idRichiestaPermesso);
-
+	@GetMapping("/deleteRichiestaPermesso/{idRichiestapermesso}")
+	public String deleteRichiestaPermesso(@PathVariable(required = true) Long idRichiestapermesso, Model model) {
 		model.addAttribute("delete_richiestapermesso_attr",
-				RichiestaPermessoDTO.buildRichiestaPermessoDTOFromModel(richiestaModel));
+				richiestaPermessoService.caricaSingolaRichiestaPermesso(idRichiestapermesso));
 
 		return "dipendente/deleteRichiestaPermesso";
 	}
-	
+
 	@PostMapping("/removeRichiestaPermesso")
-	public String remove(@RequestParam(required = true) Long idRichiestaPermesso, RedirectAttributes redirectAttrs) {
+	public String remove(@RequestParam(required = true) Long idRichiestapermesso, RedirectAttributes redirectAttrs) {
+
 		
-		richiestaPermessoService.rimuovi(idRichiestaPermesso);
 		
+		Messaggio messaggioItem = messaggioService.cercaPerIdRichiesta(idRichiestapermesso);
+
+		if (messaggioItem != null) {
+			messaggioService.rimuovi(messaggioItem.getId());
+		}
+		
+//		RichiestaPermesso richiestaDaEliminare = richiestaPermessoService.caricaSingolaRichiestaPermessoEager(idRichiestapermesso);
+//		
+//		if(richiestaDaEliminare.getAttachment() != null) {
+//		
+//			attachmentService.rimuovi(richiestaDaEliminare.getAttachment().getId());
+//		}
+
+		richiestaPermessoService.rimuovi(idRichiestapermesso);
+
 		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
-		return "redirect:/dipendente/listRichiestePermessi";
+		return "redirect:listRichiestaPermesso";
 	}
-	
-	
-	
 
 }
