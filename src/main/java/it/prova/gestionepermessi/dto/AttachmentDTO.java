@@ -1,9 +1,12 @@
 package it.prova.gestionepermessi.dto;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import it.prova.gestionepermessi.model.Attachment;
 
 public class AttachmentDTO {
-	
+
 	private Long id;
 	private String nomeFile;
 	private String contentType;
@@ -50,7 +53,7 @@ public class AttachmentDTO {
 	public void setPayload(byte[] payload) {
 		this.payload = payload;
 	}
-	
+
 	public Attachment buildAttachmentFromModel() {
 		return new Attachment(this.id, this.nomeFile, this.contentType, this.payload);
 	}
@@ -58,6 +61,12 @@ public class AttachmentDTO {
 	public static AttachmentDTO buildAttachmentDTOFromModel(Attachment attachmentModel) {
 		return new AttachmentDTO(attachmentModel.getId(), attachmentModel.getNomeFile(),
 				attachmentModel.getContentType(), attachmentModel.getPayload());
+	}
+
+	public static List<AttachmentDTO> createAttachmentDTOListFromModelList(List<Attachment> modelListInput) {
+		return modelListInput.stream().map(attachmentItem -> new AttachmentDTO(attachmentItem.getId(),
+				attachmentItem.getNomeFile(), attachmentItem.getContentType(), attachmentItem.getPayload()))
+				.collect(Collectors.toList());
 	}
 
 }

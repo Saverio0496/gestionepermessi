@@ -50,7 +50,7 @@
 		        	<div class="dropdown-menu" aria-labelledby="dropdown01">
 		        		<a class="dropdown-item" href="${pageContext.request.contextPath}/dipendente/listRichiestaPermesso">Lista Richieste Permessi</a>
 		          		<a class="dropdown-item" href="${pageContext.request.contextPath}/richiestapermesso/search">Ricerca Richieste Permessi</a>
-		          		<a class="dropdown-item" href="${pageContext.request.contextPath}/richiestapermesso/insert">Inserisci Richiesta Permesso</a>
+		          		<a class="dropdown-item" href="${pageContext.request.contextPath}/dipendente/insertRichiestaPermesso">Inserisci Richiesta Permesso</a>
 		        	</div>
 		      	</li>
 		   </sec:authorize>

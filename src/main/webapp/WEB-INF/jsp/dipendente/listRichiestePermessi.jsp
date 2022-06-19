@@ -49,7 +49,7 @@
 			                    </tr>
 			                </thead>
 			                <tbody>
-			                	<c:forEach items="${richiestapermesso_list_attribute }" var="richiestaPermessoItem">
+			                	<c:forEach items="${richiestapermesso_dipendente_list_attribute }" var="richiestaPermessoItem">
 									<tr>
 										<td>${richiestaPermessoItem.id }</td>
 										<td>${richiestaPermessoItem.tipoPermesso }</td>
