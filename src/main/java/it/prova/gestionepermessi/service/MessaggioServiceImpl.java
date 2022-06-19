@@ -68,4 +68,9 @@ public class MessaggioServiceImpl implements MessaggioService {
 		messaggioRepository.deleteById(idMessaggio);
 	}
 
+	@Override
+	public Messaggio caricaSingoloMessaggio(Long idMessaggio) {
+		return messaggioRepository.findById(idMessaggio).orElse(null);
+	}
+
 }

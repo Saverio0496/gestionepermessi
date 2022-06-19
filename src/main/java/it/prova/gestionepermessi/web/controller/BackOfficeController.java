@@ -1,5 +1,6 @@
 package it.prova.gestionepermessi.web.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -186,6 +187,13 @@ public class BackOfficeController {
 		return mv;
 	}
 	
+	@GetMapping("/showMessaggio/{idMessaggio}")
+	public String showUtente(@PathVariable(required = true) Long idMessaggio, Model model) {
+		MessaggioDTO messaggioDTO = MessaggioDTO.buildMessaggioDTOFromModel(messaggioService.caricaSingoloMessaggio(idMessaggio));
+		messaggioDTO.setDataLettura(new Date());
+		model.addAttribute("show_messaggio_attr", messaggioDTO);
+		return "backoffice/showMessaggio";
+	}
 	
 	
 }

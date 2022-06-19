@@ -15,5 +15,6 @@ public interface MessaggioService {
 
 	public List<Messaggio> listAllMessaggi();
 
-
+	public Messaggio caricaSingoloMessaggio(Long idMessaggio);
+	
 }
