@@ -167,5 +167,12 @@ public class BackOfficeController {
 		return "backoffice/listRichiestePermessi";
 	}
 	
+	@GetMapping("/showRichiestaPermesso/{idRichiestaPermesso}")
+	public String showRichiestaPermesso(@PathVariable(required = true) Long idRichiestaPermesso, Model model) {
+		model.addAttribute("show_richiestapermesso_attr",
+				richiestaPermessoService.caricaSingolaRichiestaPermessoEager(idRichiestaPermesso));
+		return "backoffice/showRichiestaPermesso";
+	}
+	
 	
 }
