@@ -39,11 +39,8 @@
 			            <table class='table table-striped ' >
 			                <thead>
 			                    <tr>
-			                    	<th>Id</th>			                        
 			                        <th>Tipo Permesso</th>
 			                        <th>Codice Certificato</th>
-			                        <th>Data di Inizio</th>
-			                        <th>Data di Fine</th>
 			                        <th>Stato</th>
 			                        <th>Azioni</th>
 			                    </tr>
@@ -51,16 +48,13 @@
 			                <tbody>
 			                	<c:forEach items="${richiestapermesso_dipendente_list_attribute }" var="richiestaPermessoItem">
 									<tr>
-										<td>${richiestaPermessoItem.id }</td>
 										<td>${richiestaPermessoItem.tipoPermesso }</td>
 										<td>${richiestaPermessoItem.codiceCertificato }</td>
-										<td><fmt:formatDate type="date" value = "${richiestaPermessoItem.dataInizio}" /></td>
-										<td><fmt:formatDate type="date" value = "${richiestaPermessoItem.dataFine}" /></td>
 										<td>${richiestaPermessoItem.approvato?'APPROVATO':'NON APPROVATO' }</td>
 										<td>
-											<a class="btn btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/dipendente/showRichiestaPermesso${richiestaPermessoItem.id}">Visualizza</a>
-											<a class="btn btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/dipendente/editRichiestaPermesso${richiestaPermessoItem.id}">Edit</a>
-											<a class="btn  btn-sm btn-outline-danger ml-2 mr-2" href="${pageContext.request.contextPath}/dipendente/deleteRichiestaPermesso${richiestaPermessoItem.id}">Delete</a>
+											<a class="btn btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/dipendente/showRichiestaPermesso/${richiestaPermessoItem.id}">Visualizza</a>
+											<a class="btn btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/dipendente/editRichiestaPermesso/${richiestaPermessoItem.id}">Edit</a>
+											<a class="btn  btn-sm btn-outline-danger ml-2 mr-2" href="${pageContext.request.contextPath}/dipendente/deleteRichiestaPermesso/${richiestaPermessoItem.id}">Delete</a>
 										</td>
 									</tr>
 								</c:forEach>

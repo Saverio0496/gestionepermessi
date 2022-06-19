@@ -40,13 +40,19 @@ public class RichiestaPermessoServiceImpl implements RichiestaPermessoService {
 		return richiestaPermessoRepository.findAllByDipendente_Id(id);
 	}
 
+	@Override
+	@Transactional(readOnly = true)
 	public RichiestaPermesso caricaSingolaRichiestaPermesso(Long id) {
-		return null;
+		return richiestaPermessoRepository.findById(id).orElse(null);
 	}
 
+	@Override
+	@Transactional
 	public void aggiorna(RichiestaPermesso richiestaPermessoInstance) {
 	}
 
+	@Override
+	@Transactional
 	public void inserisciNuovo(RichiestaPermesso richiestaPermessoInstance, boolean giornoSingolo, MultipartFile file) {
 		if (giornoSingolo) {
 			Calendar calendar = Calendar.getInstance();
@@ -54,8 +60,6 @@ public class RichiestaPermessoServiceImpl implements RichiestaPermessoService {
 			calendar.add(Calendar.HOUR, 24);
 			richiestaPermessoInstance.setDataFine(calendar.getTime());
 		}
-
-		richiestaPermessoRepository.save(richiestaPermessoInstance);
 		if (file != null) {
 			Attachment newfile = new Attachment();
 			newfile.setNomeFile(file.getOriginalFilename());
@@ -65,11 +69,18 @@ public class RichiestaPermessoServiceImpl implements RichiestaPermessoService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			richiestaPermessoInstance.setAttachment(newfile);
 			attachmentRepository.save(newfile);
+			richiestaPermessoRepository.save(richiestaPermessoInstance);
+			messaggioService.inserisciNuovo(new Messaggio(), richiestaPermessoInstance);
+			return;
 		}
+		richiestaPermessoRepository.save(richiestaPermessoInstance);
 		messaggioService.inserisciNuovo(new Messaggio(), richiestaPermessoInstance);
 	}
 
+	@Override
+	@Transactional(readOnly = true)
 	public Page<RichiestaPermesso> findByExample(RichiestaPermesso example, Integer pageNo, Integer pageSize,
 			String sortBy) {
 		return null;
