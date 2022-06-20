@@ -1,5 +1,6 @@
 package it.prova.gestionepermessi.repository.dipendente;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -21,4 +22,6 @@ public interface DipendenteRepository extends CrudRepository<Dipendente, Long> {
 	@Query("select d from Dipendente d join fetch d.utente u where u.username = ?1")
 	Optional<Dipendente> findByUsername(String username);
 
+	List<Dipendente> findByCognomeIgnoreCaseContainingOrNomeIgnoreCaseContainingOrderByNomeAsc(String cognome,
+			String nome);
 }

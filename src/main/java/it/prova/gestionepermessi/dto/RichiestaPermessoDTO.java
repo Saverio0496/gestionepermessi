@@ -33,6 +33,8 @@ public class RichiestaPermessoDTO {
 	private String note;
 
 	private MultipartFile attachment;
+	
+	private DipendenteDTO dipendenteDTO;
 
 	private Long dipendenteId;
 
@@ -160,6 +162,14 @@ public class RichiestaPermessoDTO {
 			result.setDipendente(new Dipendente(this.dipendenteId));
 		}
 		return result;
+	}
+
+	public DipendenteDTO getDipendenteDTO() {
+		return dipendenteDTO;
+	}
+
+	public void setDipendenteDTO(DipendenteDTO dipendenteDTO) {
+		this.dipendenteDTO = dipendenteDTO;
 	}
 
 }

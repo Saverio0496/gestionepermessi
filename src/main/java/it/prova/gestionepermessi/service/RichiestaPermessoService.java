@@ -9,16 +9,17 @@ import it.prova.gestionepermessi.dto.RichiestaPermessoSearchDTO;
 import it.prova.gestionepermessi.model.RichiestaPermesso;
 
 public interface RichiestaPermessoService {
-	
+
 	public List<RichiestaPermesso> listAllRichiestePermessi();
-	
+
 	public List<RichiestaPermesso> listAllRichiestePermessiPerIdDipendente(Long id);
 
 	public RichiestaPermesso caricaSingolaRichiestaPermesso(Long id);
 
-	public void inserisciNuovo(RichiestaPermesso richiestaPermessoInstance, boolean giornoUnico,  MultipartFile file);
-	
-	public Page<RichiestaPermesso> findByExample(RichiestaPermessoSearchDTO example, Integer pageNo, Integer pageSize, String sortBy);
+	public void inserisciNuovo(RichiestaPermesso richiestaPermessoInstance, boolean giornoUnico, MultipartFile file);
+
+	public Page<RichiestaPermesso> findByExample(RichiestaPermessoSearchDTO example, Integer pageNo, Integer pageSize,
+			String sortBy);
 
 	public void rimuovi(Long idRichiesta);
 
@@ -28,8 +29,11 @@ public interface RichiestaPermessoService {
 
 	public void aggiorna(Long idRichiestapermesso, MultipartFile file);
 
-	Page<RichiestaPermesso> findByExamplePerBO(RichiestaPermessoSearchDTO example, Integer pageNo, Integer pageSize, String sortBy);
+	Page<RichiestaPermesso> findByExamplePerBO(RichiestaPermessoSearchDTO example, Integer pageNo, Integer pageSize,
+			String sortBy);
 
 	public void aggiorna(RichiestaPermesso richiestaModel);
+
+	void approvaRichiesta(Long idRichiestaPermesso);
 
 }

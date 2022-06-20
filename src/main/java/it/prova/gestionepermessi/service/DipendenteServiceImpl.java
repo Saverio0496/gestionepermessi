@@ -147,5 +147,10 @@ public class DipendenteServiceImpl implements DipendenteService {
 	public Dipendente cercaPerUsername(String username) {
 		return dipendenteRepository.findByUsername(username).orElse(null);
 	}
+	
+	@Transactional(readOnly = true)
+	public List<Dipendente> cercaByCognomeENomeILike(String term) {
+		return dipendenteRepository.findByCognomeIgnoreCaseContainingOrNomeIgnoreCaseContainingOrderByNomeAsc(term, term);
+	}
 
 }

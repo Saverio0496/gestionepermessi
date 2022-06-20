@@ -35,7 +35,6 @@
 		      	</li>
 		      	<li class="nav-item">
             		<a class="nav-link active" aria-current="page" href="${pageContext.request.contextPath}/backoffice/searchRichiestaPermesso">Ricerca Richieste Permesso</a>
-            		<a class="dropdown-item" href="${pageContext.request.contextPath}/backoffice/listRichiestePermesso">Lista Richieste Permessi</a>
           		</li>
           		<li class="nav-item dropdown">
 		        	<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestione Messaggi</a>

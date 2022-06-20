@@ -116,7 +116,7 @@ public class RichiestaPermessoServiceImpl implements RichiestaPermessoService {
 			root.fetch("dipendente", JoinType.INNER);
 			
 			if(StringUtils.isNotEmpty(example.getCodiceCertificato()))
-				predicates.add(cb.like(cb.upper(root.get("CodiceCertificato")), "%"+ example.getCodiceCertificato().toUpperCase()+"%" ));
+				predicates.add(cb.like(cb.upper(root.get("codiceCertificato")), "%"+ example.getCodiceCertificato().toUpperCase()+"%" ));
 			
 			if (example.getDataInizio() != null)
 				predicates.add(cb.greaterThanOrEqualTo(root.get("dataInizio"), example.getDataInizio()));
@@ -173,9 +173,10 @@ public class RichiestaPermessoServiceImpl implements RichiestaPermessoService {
 			List<Predicate> predicates = new ArrayList<Predicate>();
 			
 			root.fetch("dipendente", JoinType.INNER);
+			root.fetch("attachment", JoinType.INNER);
 			
 			if(StringUtils.isNotEmpty(example.getCodiceCertificato()))
-				predicates.add(cb.like(cb.upper(root.get("CodiceCertificato")), "%"+ example.getCodiceCertificato().toUpperCase()+"%" ));
+				predicates.add(cb.like(cb.upper(root.get("codiceCertificato")), "%"+ example.getCodiceCertificato().toUpperCase()+"%" ));
 			
 			if (example.getDataInizio() != null)
 				predicates.add(cb.greaterThanOrEqualTo(root.get("dataInizio"), example.getDataInizio()));
@@ -190,6 +191,11 @@ public class RichiestaPermessoServiceImpl implements RichiestaPermessoService {
 				predicates.add(
 						cb.equal(root.join("dipendente").get("id"), example.getDipendente().getId()));
 			}
+			
+			if(example.getAttachment()!= null) {
+				predicates.add(cb.equal(root.join("attachment"), example.getAttachment()));
+			}
+			
 			query.distinct(true);
 			return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 		};
@@ -208,5 +214,19 @@ public class RichiestaPermessoServiceImpl implements RichiestaPermessoService {
 	@Transactional
 	public void aggiorna(RichiestaPermesso richiestaModel) {
 		richiestaPermessoRepository.save(richiestaModel);
+	}
+	
+	@Override
+	@Transactional
+	public void approvaRichiesta(Long idRichiestaPermesso) {
+		RichiestaPermesso richiestaInstance = caricaSingolaRichiestaPermesso(idRichiestaPermesso);
+
+		if (richiestaInstance.isApprovato() == false) {
+			richiestaInstance.setApprovato(true);
+		}
+		else if (richiestaInstance.isApprovato() == true) {
+			richiestaInstance.setApprovato(false);
+		}
+
 	}
 }

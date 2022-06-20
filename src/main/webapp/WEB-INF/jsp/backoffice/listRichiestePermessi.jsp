@@ -50,9 +50,6 @@
 										<td>${richiestaPermessoItem.approvato?'APPROVATO':'NON APPROVATO' }</td>
 										<td>
 											<a class="btn btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/backoffice/showRichiestaPermesso/${richiestaPermessoItem.id}">Visualizza</a>
-											<c:if test="${richiestaPermessoItem.isApprovato() == false}">
-												<a id="approvaLink_#_${richiestaItem.id }" class="btn btn-outline-${richiestaItem.isApprovato()?'danger':'success'} btn-sm link-for-modal" data-bs-toggle="modal" data-bs-target="#confirmOperationModal"  >${richiestaItem.isApprovato()?'Nega':'Approva'}</a>
-											</c:if>
 										</td>
 									</tr>
 								</c:forEach>

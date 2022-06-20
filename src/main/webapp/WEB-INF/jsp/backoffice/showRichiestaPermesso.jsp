@@ -1,5 +1,6 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!doctype html>
 <html lang="it" class="h-100">
 <head>
@@ -99,11 +100,18 @@
 			    <!-- end card body -->
 			    </div>
 			    
-			    <div class='card-footer'>
-			        <a href="${pageContext.request.contextPath }/backoffice/listRichiestePermesso" class='btn btn-outline-secondary' style='width:80px'>
-			            <i class='fa fa-chevron-left'></i> Back
-			        </a>
-			    </div>
+			    <form:form method="post" action="${pageContext.request.contextPath}/backoffice/approvaRichiesta" class="row g-3" novalidate="novalidate">
+			    
+			    	<input type="hidden" name = "idRichiestaForApprovaRichiesta" value = "${show_richiestapermesso_attr.id}">
+			    	<div class="col-12">
+					        <a href="${pageContext.request.contextPath }/backoffice/listRichiestePermesso" class='btn btn-outline-secondary' style='width:80px'>
+					            <i class='fa fa-chevron-left'></i> Back
+					        </a>
+					        	<input type="submit" name="submit" value="Approva" id="submit" class="btn btn-outline-primary">	
+					      	    <input type="submit" name="submit" value="Nega" id="submit" class="btn btn-outline-danger">
+			        </div>
+			        
+			        </form:form>
 			<!-- end card -->
 			</div>	
 	

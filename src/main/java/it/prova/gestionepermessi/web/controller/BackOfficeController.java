@@ -7,8 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -19,20 +18,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import it.prova.gestionepermessi.dto.AttachmentDTO;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import it.prova.gestionepermessi.dto.DipendenteDTO;
 import it.prova.gestionepermessi.dto.MessaggioDTO;
 import it.prova.gestionepermessi.dto.RichiestaPermessoDTO;
 import it.prova.gestionepermessi.dto.RichiestaPermessoSearchDTO;
-import it.prova.gestionepermessi.model.Attachment;
 import it.prova.gestionepermessi.model.Dipendente;
 import it.prova.gestionepermessi.model.Messaggio;
 import it.prova.gestionepermessi.model.RichiestaPermesso;
 import it.prova.gestionepermessi.model.Utente;
-import it.prova.gestionepermessi.service.AttachmentService;
 import it.prova.gestionepermessi.service.DipendenteService;
 import it.prova.gestionepermessi.service.MessaggioService;
 import it.prova.gestionepermessi.service.RichiestaPermessoService;
@@ -153,22 +154,19 @@ public class BackOfficeController {
 			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "id") String sortBy,
 			ModelMap model) {
 		
-		Authentication  utenteInPagina= SecurityContextHolder.getContext().getAuthentication();
-		Dipendente dipendente= dipendenteService.cercaPerUsername(utenteInPagina.getName());
-		richiestaPermesso.setDipendente(dipendente);
 		List<RichiestaPermesso> richiestePermessi = richiestaPermessoService.findByExamplePerBO(richiestaPermesso, pageNo, pageSize, sortBy).getContent();
 		model.addAttribute("richiestapermesso_dipendente_list_attribute", RichiestaPermessoDTO.createRichiestePermessiListDTOFromModelList(richiestePermessi));
 		return "backoffice/listRichiestePermessi";
 	}
 	
-	@GetMapping("/approva/{idRichiesta}")
-	public String cambiaStato(@PathVariable(required = true) Long idRichiesta, Model model) {
-		RichiestaPermesso richiestaModel = richiestaPermessoService.caricaSingolaRichiestaPermessoEager(idRichiesta);
+	@PostMapping("/approvaRichiesta")
+	public String approvaRichiesta(
+			@RequestParam(name = "idRichiestaForApprovaRichiesta", required = true) Long idRichiestapermesso, RedirectAttributes redirectAttrs) {
 
-		richiestaModel.setApprovato(!richiestaModel.isApprovato());
-		richiestaPermessoService.aggiorna(richiestaModel);
+		richiestaPermessoService.approvaRichiesta(idRichiestapermesso);
 
-		return "backoffice/listRichiestePermessi";
+		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
+		return "redirect:/backoffice/listRichiestePermesso";
 	}
 	
 	@GetMapping("/showRichiestaPermesso/{idRichiestaPermesso}")
@@ -195,5 +193,24 @@ public class BackOfficeController {
 		return "backoffice/showMessaggio";
 	}
 	
+	@GetMapping(value = "/searchDipendentiAjax", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public @ResponseBody String searchDipendenti(@RequestParam String term) {
+
+		List<Dipendente> listaDipendentByTerm = dipendenteService.cercaByCognomeENomeILike(term);
+		return buildJsonResponse(listaDipendentByTerm);
+	}
+
+	private String buildJsonResponse(List<Dipendente> listaDipendenti) {
+		JsonArray ja = new JsonArray();
+
+		for (Dipendente dipendenteItem : listaDipendenti) {
+			JsonObject jo = new JsonObject();
+			jo.addProperty("value", dipendenteItem.getId());
+			jo.addProperty("label", dipendenteItem.getNome() + " " + dipendenteItem.getCognome());
+			ja.add(jo);
+		}
+
+		return new Gson().toJson(ja);
+	}
 	
 }

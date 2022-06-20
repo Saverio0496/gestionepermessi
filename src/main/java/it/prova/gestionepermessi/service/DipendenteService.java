@@ -24,5 +24,7 @@ public interface DipendenteService {
 	public Page<Dipendente> findByExample(Dipendente example, Integer pageNo, Integer pageSize, String sortBy);
 
 	Dipendente cercaPerUsername(String username);
+	
+	public List<Dipendente> cercaByCognomeENomeILike(String term);
 
 }

@@ -39,7 +39,7 @@
 	
 						<form:form modelAttribute="search_richiestapermesso_attr" method="post" action="${pageContext.request.contextPath}/backoffice/listForSearchRichiestaPermesso" novalidate="novalidate" class="row g-3">
 						
-							<div class="col-md-12">
+							<div class="col-md-3">
 									<label for="tipoPermesso" class="form-label">Tipo Permesso</label>
 								    <spring:bind path="tipoPermesso">
 									    <select class="form-select ${status.error ? 'is-invalid' : ''}" id="tipoPermesso" name="tipoPermesso" required>
@@ -50,15 +50,6 @@
 								    </spring:bind>
 								    <form:errors  path="tipoPermesso" cssClass="error_field" />
 								</div>
-								
-								<div class="col-md-6 " id="codiceCertificato">
-									<label for="codiceCertificato" class="form-label">Codice Certificato </label>
-									<spring:bind path="codiceCertificato">
-										<input type="text" name="codiceCertificato" id="codiceCertificato" class="form-control ${status.error ? 'is-invalid' : ''}" placeholder="Inserire il codice certificato" value="${search_richiestapermesso_attr.codiceCertificato }" >
-									</spring:bind>
-									<form:errors  path="codiceCertificato" cssClass="error_field" />
-								</div>
-								
 								
 								<fmt:formatDate pattern='yyyy-MM-dd' var="parsedDateInizio" type='date' value='${search_richiestapermesso_attr.dataInizio}' />
 								<div class="col-md-3">
@@ -82,35 +73,22 @@
 	                            	<form:errors  path="dataFine" cssClass="error_field" />
 								</div>
 								
-								<div class="col-md-12">
-								  <spring:bind path="approvato">
-									  <input class="form-check-input" type="checkbox"  id="approvato" name="approvato">
-								  </spring:bind>
-								  <label class="form-check-label" for="approvato">Approvato</label>
+								<div class="col-md-6 " id="codFis">
+									<label for="codiceCertificato" class="form-label">Codice Certificato </label>
+									<spring:bind path="codiceCertificato">
+										<input type="text" name="codiceCertificato" id="codiceCertificato" class="form-control ${status.error ? 'is-invalid' : ''}" placeholder="Inserire il codice certificato" value="${search_richiestapermesso_attr.codiceCertificato }" >
+									</spring:bind>
+									<form:errors  path="codiceCertificato" cssClass="error_field" />
 								</div>
 								
-									<div class="col-md-6 form-check" id="dipDivId">
-										<p>Dipendente:</p>
-										<form:radiobuttons itemValue="id" itemLabel="nome"  element="div class='form-check'" items="${search_richiestapermesso_dipendente_attr}" path="dipendenteId" />
-									</div>
-									<script>
-										$(document).ready(function(){
-											
-											$("#dipDivId :input").each(function () {
-												$(this).addClass('form-check-input'); 
-											});
-											$("#dipDivId label").each(function () {
-												$(this).addClass('form-check-label'); 
-											});
-											
-										});
-									</script>
-								
-								<div >
-									<label for="note" class="form-label">Note</label>
-									<spring:bind path="note">
-										<textarea class="form-control rounded-0" id="note" rows="3" name="note"></textarea>
+								<div class="col-md-6">
+									<label for="dipendenteSearchInput" class="form-label">Dipendente:</label>
+									<spring:bind path="dipendenteDTO">
+										<input class="form-control ${status.error ? 'is-invalid' : ''}" type="text" id="dipendenteSearchInput"
+											name="dipendenteInput" value="${search_richiestapermesso_attr.dipendenteDTO.nome}${empty search_richiestapermesso_attr.dipendenteDTO.nome?'':' '}${search_richiestapermesso_attr.dipendenteDTO.cognome}">
 									</spring:bind>
+									<input type="hidden" name="dipendenteId" id="dipendenteId" value="${search_richiestapermesso_attr.dipendenteDTO.id}">
+									<form:errors  path="dipendenteDTO" cssClass="error_field" />
 								</div>
 							
 							<div class="col-12">	
@@ -118,6 +96,48 @@
 								<input class="btn btn-outline-warning" type="reset" value="Ripulisci">
 							</div>
 						</form:form>
+						
+						<%-- FUNZIONE JQUERY UI PER AUTOCOMPLETE --%>
+								<script>
+									$("#dipendenteSearchInput").autocomplete({
+										 source: function(request, response) {
+											 	//quando parte la richiesta ajax devo ripulire registaId
+											 	//altrimenti quando modifico il campo, cancellando
+											 	//qualche carattere, mi rimarrebbe comunque valorizzato il 
+											 	//'vecchio id'
+											 	$('#dipendenteId').val('');
+											 	
+										        $.ajax({
+										            url: "${pageContext.request.contextPath}/backoffice/searchDipendentiAjax",
+										            datatype: "json",
+										            data: {
+										                term: request.term,   
+										            },
+										            success: function(data) {
+										                response($.map(data, function(item) {
+										                    return {
+											                    label: item.label,
+											                    value: item.value
+										                    }
+										                }))
+										            }
+										        });
+										    },
+										//quando seleziono la voce nel campo deve valorizzarsi la descrizione
+									    focus: function(event, ui) {
+									        $("#dipendenteSearchInput").val(ui.item.label);
+									        return false;
+									    },
+									    minLength: 2,
+									    //quando seleziono la voce nel campo hidden deve valorizzarsi l'id
+									    select: function( event, ui ) {
+									    	$('#dipendenteId').val(ui.item.value);
+									    	//console.log($('#registaId').val())
+									        return false;
+									    }
+									});
+								</script>
+								<!-- end script autocomplete -->	
 			    
 				<!-- end card-body -->			   
 			    </div>
@@ -129,4 +149,3 @@
 	<jsp:include page="../footer.jsp" />
 	
 </body>
-</html>
