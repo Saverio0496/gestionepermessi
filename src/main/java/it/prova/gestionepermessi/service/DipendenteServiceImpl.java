@@ -153,4 +153,12 @@ public class DipendenteServiceImpl implements DipendenteService {
 		return dipendenteRepository.findByCognomeIgnoreCaseContainingOrNomeIgnoreCaseContainingOrderByNomeAsc(term, term);
 	}
 
+	public Dipendente findById(Long id) {
+		return dipendenteRepository.findById(id).orElse(null);
+	}
+
+	public Dipendente findByNomeECognome(String nome, String cognome) {
+		return dipendenteRepository.findByNomeAndCognome(nome,cognome).orElse(null);
+	}
+
 }

@@ -156,6 +156,11 @@ public class BackOfficeController {
 			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "id") String sortBy,
 			ModelMap model) {
 		
+		String arr[] = richiestaPermesso.getDipendenteNominativo().split(" ", 2);
+		String nome = arr[0];  
+		String cognome = arr[1]; 
+		
+		richiestaPermesso.setDipendente(dipendenteService.findByNomeECognome(nome, cognome));
 		List<RichiestaPermesso> richiestePermessi = richiestaPermessoService.findByExamplePerBO(richiestaPermesso, pageNo, pageSize, sortBy).getContent();
 		model.addAttribute("richiestapermesso_dipendente_list_attribute", RichiestaPermessoDTO.createRichiestePermessiListDTOFromModelList(richiestePermessi));
 		return "backoffice/listRichiestePermessi";
@@ -223,6 +228,21 @@ public class BackOfficeController {
 			return new ResponseEntity<String>(HttpStatus.OK);
 		else
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+	}
+	
+	@GetMapping("/searchMessaggio")
+	public String searchMessaggio(Model model) {
+		model.addAttribute("messaggio_list_attribute", MessaggioDTO.buildMessaggioDTOFromModelList(messaggioService.listAllMessaggi()));
+		return "backoffice/searchMessaggio";
+	}
+
+	@PostMapping("/listForSearchMessaggio")
+	public String listMessaggi(MessaggioDTO messaggioExample , @RequestParam(defaultValue = "0") Integer pageNo,
+			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "id") String sortBy,ModelMap model) {
+
+		List<Messaggio> messaggi = messaggioService.findByExample(messaggioExample, pageNo, pageSize, sortBy).getContent();
+		model.addAttribute("messaggio_list_attribute", MessaggioDTO.buildMessaggioDTOFromModelList(messaggi));
+		return "backoffice/listMessaggi";
 	}
 	
 }

@@ -85,9 +85,8 @@
 									<label for="dipendenteSearchInput" class="form-label">Dipendente:</label>
 									<spring:bind path="dipendenteDTO">
 										<input class="form-control ${status.error ? 'is-invalid' : ''}" type="text" id="dipendenteSearchInput"
-											name="dipendenteInput" value="${search_richiestapermesso_attr.dipendenteDTO.nome}${empty search_richiestapermesso_attr.dipendenteDTO.nome?'':' '}${search_richiestapermesso_attr.dipendenteDTO.cognome}">
+											name="dipendenteNominativo">
 									</spring:bind>
-									<input type="hidden" name="dipendenteId" id="dipendenteId" value="${search_richiestapermesso_attr.dipendenteDTO.id}">
 									<form:errors  path="dipendenteDTO" cssClass="error_field" />
 								</div>
 							

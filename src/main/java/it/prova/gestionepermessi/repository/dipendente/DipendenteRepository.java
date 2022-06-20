@@ -24,4 +24,6 @@ public interface DipendenteRepository extends CrudRepository<Dipendente, Long> {
 
 	List<Dipendente> findByCognomeIgnoreCaseContainingOrNomeIgnoreCaseContainingOrderByNomeAsc(String cognome,
 			String nome);
+	
+	Optional<Dipendente> findByNomeAndCognome(String nome, String cognome);
 }

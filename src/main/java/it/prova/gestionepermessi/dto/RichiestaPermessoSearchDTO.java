@@ -28,6 +28,9 @@ public class RichiestaPermessoSearchDTO {
 	private MultipartFile attachment;
 
 	private Long dipendenteId;
+	
+	private String dipendenteNominativo;
+	
 
 	public RichiestaPermessoSearchDTO() {
 		super();
@@ -60,7 +63,8 @@ public class RichiestaPermessoSearchDTO {
 	public Date getDataFine() {
 		return dataFine;
 	}
-
+	
+	
 	public void setDataFine(Date dataFine) {
 		this.dataFine = dataFine;
 	}
@@ -88,6 +92,15 @@ public class RichiestaPermessoSearchDTO {
 	public void setNote(String note) {
 		this.note = note;
 	}
+	
+
+	public String getDipendenteNominativo() {
+		return dipendenteNominativo;
+	}
+
+	public void setDipendenteNominativo(String dipendenteNominativo) {
+		this.dipendenteNominativo = dipendenteNominativo;
+	}
 
 	public Dipendente getDipendente() {
 		return dipendente;
@@ -113,4 +126,7 @@ public class RichiestaPermessoSearchDTO {
 		this.dipendenteId = dipendenteId;
 	}
 
+
+	
+	
 }
