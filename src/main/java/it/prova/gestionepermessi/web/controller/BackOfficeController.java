@@ -7,7 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -189,6 +191,7 @@ public class BackOfficeController {
 	public String showUtente(@PathVariable(required = true) Long idMessaggio, Model model) {
 		MessaggioDTO messaggioDTO = MessaggioDTO.buildMessaggioDTOFromModel(messaggioService.caricaSingoloMessaggio(idMessaggio));
 		messaggioDTO.setDataLettura(new Date());
+		messaggioDTO.setLetto(true);
 		model.addAttribute("show_messaggio_attr", messaggioDTO);
 		return "backoffice/showMessaggio";
 	}
@@ -211,6 +214,15 @@ public class BackOfficeController {
 		}
 
 		return new Gson().toJson(ja);
+	}
+	
+	@GetMapping(value = "/presentiMessaggiNonLetti", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<String> checkPresenzaMessaggiNonLetti() {
+
+		if (!messaggioService.findAllMessaggiNonLetti().isEmpty())
+			return new ResponseEntity<String>(HttpStatus.OK);
+		else
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 	}
 	
 }

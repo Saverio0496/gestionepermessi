@@ -49,7 +49,7 @@ public class MessaggioServiceImpl implements MessaggioService {
 						+ richiestaInstance.getDataInizio() + " al giorno " + richiestaInstance.getDataFine() + parteFinaleMessaggio);
 
 		messaggioInstance.setDataInserimento(new Date());
-		messaggioInstance.setLetto(true);
+		messaggioInstance.setLetto(false);
 		messaggioInstance.setRichiestaPermesso(richiestaInstance);
 
 		messaggioRepository.save(messaggioInstance);
@@ -71,6 +71,10 @@ public class MessaggioServiceImpl implements MessaggioService {
 	@Override
 	public Messaggio caricaSingoloMessaggio(Long idMessaggio) {
 		return messaggioRepository.findById(idMessaggio).orElse(null);
+	}
+
+	public List<Messaggio> findAllMessaggiNonLetti() {
+		return messaggioRepository.findAllMessaggiNonLetti();
 	}
 
 }
